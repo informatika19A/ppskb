@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MPI Informatika 2026 — Perencanaan Sistem Komputer</title>
+<title>MPI - PPSK 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -169,7 +169,7 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:20px}
 <div class="sync" id="sync"></div>
 
 <div class="modal" id="mGuru"><div class="mc">
-  <h3>🔐 Masuk Dasbor Guru</h3>
+  <h3>🔐 Masuk Dashboard Guru</h3>
   <p class="lead" style="margin:6px 0 14px">Masukkan password guru untuk memantau hasil pengerjaan siswa.</p>
   <div class="field"><input type="password" id="gPw" placeholder="Password guru" autocomplete="off"></div>
   <div class="row"><button class="btn" id="gGo">Masuk</button><button class="btn alt" id="gCancel">Batal</button></div>
@@ -448,16 +448,16 @@ function rLogin(){
     <div class="row" style="margin-top:16px"><span class="tag mint">🎯 Menjelaskan perencanaan</span><span class="tag pink">🛠️ Mengidentifikasi kebutuhan</span><span class="tag yel">💭 Refleksi diri</span></div>
     <div class="illu" style="margin-top:20px;min-height:170px"><div style="font-family:Sora;font-weight:800;font-size:22px;text-align:center" class="grad">Rencana → Kebutuhan → Spesifikasi → Rakit</div></div>
    </div>
-   <div class="card" style="margin:0"><h2>👋 Yuk, Masuk!</h2><p class="lead" style="margin-bottom:16px">Isi data dirimu dengan benar. Hasil belajarmu tersimpan otomatis.</p>
+   <div class="card" style="margin:0"><h2>👋 Yuk, Belajar Lagi!</h2><p class="lead" style="margin-bottom:16px">Isi data dirimu dengan benar. Hasil belajarmu tersimpan otomatis.</p>
     <form id="fLogin" autocomplete="off">
      <div class="field"><label class="l">Nama Lengkap</label><input type="text" id="lNama" placeholder="Contoh: Aisyah Putri" value="${esc(p.nama||'')}" maxlength="60"></div>
      <div class="field"><label class="l">NIS</label><input type="text" id="lNis" inputmode="numeric" placeholder="Nomor Induk Siswa" value="${esc(p.nis||'')}" maxlength="12"></div>
      <div class="grid2"><div class="field"><label class="l">Tanggal</label><input type="date" id="lTgl" value="${esc(p.tanggal||today)}"></div>
      <div class="field"><label class="l">Kelas</label><select id="lKelas"><option value="">Pilih kelas…</option>${KELAS.map(k=>`<option ${p.kelas===k?'selected':''}>${k}</option>`).join('')}</select></div></div>
-     <button class="btn" style="width:100%" type="submit">Masuk &amp; Mulai Belajar 🚀</button>
+     <button class="btn" style="width:100%" type="submit">Masuk &amp; Mulai Belajar</button>
      <p id="lErr" style="color:#d33;font-weight:600;font-size:13px;margin-top:10px"></p>
     </form>
-    <div style="text-align:center;margin-top:12px"><a class="lnk" id="lGuru" style="font-size:13px">🔐 Masuk Dasbor Guru</a></div>
+    <div style="text-align:center;margin-top:12px"><a class="lnk" id="lGuru" style="font-size:13px">🔐 Masuk Dashboard Guru</a></div>
    </div></div>`;
   $('#fLogin').onsubmit=async e=>{
     e.preventDefault();
@@ -666,7 +666,7 @@ function simC(el){
    <span class="tag" style="background:${p.c};color:#fff">${p.ic} Langkah ${U.i+1}: ${p.t}</span>
    <div class="box b1x" style="margin:12px 0;font-size:15px">${p.s}</div>
    ${p.o.map((o,j)=>`<button class="choice" data-j="${j}">${esc(o[0])}</button>`).join('')}<div id="fbC"></div></div>
-   <div class="card" style="margin:0"><h3>📊 Dasbor Proyek</h3>${meters(U.m)}<p class="lead" style="font-size:12.5px;margin-top:8px">Proyek: <b>PC Studio Multimedia (Rp15 juta)</b>. Ambil keputusan terbaik di tiap langkah!</p></div></div>`;
+   <div class="card" style="margin:0"><h3>📊 Dashboard Proyek</h3>${meters(U.m)}<p class="lead" style="font-size:12.5px;margin-top:8px">Proyek: <b>PC Studio Multimedia (Rp15 juta)</b>. Ambil keputusan terbaik di tiap langkah!</p></div></div>`;
   $$('.choice',el).forEach(b=>b.onclick=()=>{
     const j=+b.dataset.j,o=p.o[j];U.picks[U.i]=j;
     U.m=[U.m[0]+o[1],U.m[1]+o[2],U.m[2]+o[3]].map(x=>Math.max(0,Math.min(100,x)));
@@ -791,7 +791,7 @@ function rHasil(){
 }
 
 /* ============================================================
-   DASBOR GURU
+   DASHBOARD GURU
    ============================================================ */
 let GURU={pw:'',rows:[]};
 $('#gCancel').onclick=()=>$('#mGuru').classList.remove('on');
@@ -811,7 +811,7 @@ const avg=a=>{a=a.filter(x=>x!==null);return a.length?Math.round(a.reduce((x,y)=
 const jp=(s,d)=>{try{return JSON.parse(s)}catch(e){return d}};
 function rGuru(){
   const v=$('#v-guru');
-  v.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><div><span class="tag pink">👩‍🏫 Dasbor Guru</span><h2 style="margin-top:8px">Pemantauan Hasil Siswa</h2>${GURU.local?'<p class="lead" style="color:#c2410c">Mode lokal: belum terhubung ke Google Sheet. Hanya menampilkan data perangkat ini.</p>':''}</div>
+  v.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><div><span class="tag pink">👩‍🏫 Dashboard Guru</span><h2 style="margin-top:8px">Pemantauan Hasil Siswa</h2>${GURU.local?'<p class="lead" style="color:#c2410c">Mode lokal: belum terhubung ke Google Sheet. Hanya menampilkan data perangkat ini.</p>':''}</div>
    <div class="row"><button class="btn sm alt" id="gRef">🔄 Muat ulang</button><button class="btn sm mint" id="gCsv">⬇️ Ekspor CSV</button><button class="btn sm alt" id="gOut">Keluar</button></div></div></div>
    <div class="card"><h3>🗓️ Jadwal Pengerjaan per Kelas <span class="lead" style="font-size:12px">(waktu WIB)</span></h3>
    ${GURU.local?'<p class="lead" style="color:#c2410c">Jadwal hanya dapat diatur setelah terhubung ke Google Sheet.</p>':`<div class="scroll"><table class="t"><thead><tr><th>Kelas</th><th>Mulai</th><th>Berakhir</th><th>Status</th></tr></thead><tbody>${KELAS.map(k=>{const w=JADWAL[k]||{},st=winState(k).s;return `<tr><td><b>${k}</b></td><td><input type="datetime-local" data-k="${k}" data-f="mulai" value="${toLocalIn(w.mulai)}"></td><td><input type="datetime-local" data-k="${k}" data-f="selesai" value="${toLocalIn(w.selesai)}"></td><td>${({open:'🟢 Berlangsung',wait:'🟡 Belum mulai',end:'🔴 Selesai',none:'⚪ Belum diatur',err:'⚠️'})[st]}</td></tr>`}).join('')}</tbody></table></div>
