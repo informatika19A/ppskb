@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MPI Informatika 2026 — Perencanaan Sistem Komputer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6ff;--ink:#1f2547;--mut:#6a7196;--p:#5b6cff;--p2:#8a5bff;--pink:#ff6bb5;--mint:#1fcfa8;--yel:#ffc43d;--ora:#ff8a5b;--sky:#34b8ff;--card:#fff;--line:#e6e9fb;--r:22px;--sh:0 10px 30px rgba(91,108,255,.13)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;overflow-x:hidden;line-height:1.6}
+h1,h2,h3,h4{font-family:'Sora','Plus Jakarta Sans',sans-serif;line-height:1.25}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:radial-gradient(900px 500px at 10% -10%,#e3e7ff 0,transparent 60%),radial-gradient(800px 500px at 100% 0,#ffe3f2 0,transparent 55%),radial-gradient(900px 600px at 50% 110%,#d9fbf2 0,transparent 55%),var(--bg)}
+.blob{position:absolute;border-radius:50%;opacity:.55;filter:blur(2px)}
+.b1{width:180px;height:180px;background:#cfd6ff;left:-40px;top:22%}
+.b2{width:120px;height:120px;background:#ffd0e8;right:6%;top:14%}
+.b3{width:150px;height:150px;background:#c4f5e8;right:-30px;bottom:18%}
+.b4{width:80px;height:80px;background:#ffe9a8;left:8%;bottom:8%}
+.sq{position:absolute;width:46px;height:46px;border-radius:14px;background:#ffd9c7;opacity:.6;left:42%;top:8%;transform:rotate(18deg)}
+.top{position:sticky;top:0;z-index:20;background:rgba(244,246,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1100px;margin:auto;padding:10px 18px;display:flex;align-items:center;gap:14px;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-family:Sora;font-weight:800;font-size:18px}
+.logo i{font-style:normal;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--p),var(--pink));color:#fff;box-shadow:var(--sh)}
+.logo small{display:block;font-family:'Plus Jakarta Sans';font-weight:600;font-size:11px;color:var(--mut);margin-top:-4px}
+.who{font-size:13px;font-weight:600;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;display:none;box-shadow:var(--sh)}
+.stepper{max-width:1100px;margin:auto;padding:0 18px 10px;display:none;gap:8px;overflow-x:auto}
+.step{flex:1 0 auto;display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:14px;background:#fff;border:1px solid var(--line);font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;color:var(--mut);transition:.2s}
+.step .n{width:24px;height:24px;border-radius:8px;background:#eef0ff;display:grid;place-items:center;font-size:12px}
+.step.on{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border-color:transparent;box-shadow:var(--sh)}
+.step.on .n{background:rgba(255,255,255,.25);color:#fff}
+.step.done .n{background:var(--mint);color:#fff}
+.step.lock{opacity:.5}
+main{max-width:1100px;margin:auto;padding:22px 18px 70px}
+.view{display:none;animation:in .35s ease}
+.view.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:24px;border:1px solid var(--line);margin-bottom:18px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
+@media(max-width:820px){.hero{grid-template-columns:1fr}}
+.tag{display:inline-flex;gap:6px;align-items:center;font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;background:#eef0ff;color:var(--p);letter-spacing:.3px}
+.tag.pink{background:#ffe4f2;color:#d63384}.tag.mint{background:#d9fbf2;color:#0c8a6e}.tag.yel{background:#fff1c9;color:#a07100}.tag.ora{background:#ffe5d9;color:#c2410c}
+h1{font-size:clamp(26px,4.4vw,42px);margin:12px 0}
+h2{font-size:clamp(20px,3vw,27px);margin-bottom:6px}
+h3{font-size:18px;margin-bottom:6px}
+.grad{background:linear-gradient(90deg,var(--p),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+p.lead{color:var(--mut);font-size:15px}
+.field{margin-bottom:14px}
+label.l{display:block;font-weight:700;font-size:13px;margin-bottom:6px}
+input[type=text],input[type=date],input[type=password],select,textarea{width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--line);font:inherit;background:#fbfcff;color:var(--ink);outline:none;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--p);box-shadow:0 0 0 4px rgba(91,108,255,.12);background:#fff}
+textarea{min-height:130px;resize:vertical}
+.btn{font:inherit;font-weight:800;border:0;cursor:pointer;padding:12px 22px;border-radius:14px;color:#fff;background:linear-gradient(135deg,var(--p),var(--p2));box-shadow:0 8px 20px rgba(91,108,255,.3);transition:.2s;display:inline-flex;gap:8px;align-items:center;justify-content:center}
+.btn:hover{transform:translateY(-2px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.alt{background:#fff;color:var(--p);border:2px solid var(--line);box-shadow:none}
+.btn.mint{background:linear-gradient(135deg,var(--mint),#12b3d6);box-shadow:0 8px 20px rgba(31,207,168,.3)}
+.btn.pink{background:linear-gradient(135deg,var(--pink),var(--ora));box-shadow:0 8px 20px rgba(255,107,181,.3)}
+.btn.sm{padding:8px 14px;font-size:13px;border-radius:12px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.simc{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.grid4{grid-template-columns:1fr 1fr}.simc{grid-template-columns:1fr}}
+@media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+.illu{background:linear-gradient(135deg,#eef0ff,#ffe9f5);border-radius:26px;padding:22px;position:relative;min-height:260px;display:grid;place-items:center}
+.q{border:2px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;background:#fff}
+.q .qn{display:flex;gap:10px;font-weight:700;margin-bottom:10px}
+.q .qn b{flex:0 0 32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--p),var(--pink));color:#fff;display:grid;place-items:center;font-size:14px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:2px solid var(--line);border-radius:14px;margin-top:8px;cursor:pointer;transition:.15s;font-size:14px}
+.opt:hover{border-color:#b9c0ff;background:#fafbff}
+.opt input{margin-top:4px;accent-color:var(--p)}
+.opt .lt{flex:0 0 26px;height:26px;border-radius:8px;background:#eef0ff;color:var(--p);font-weight:800;font-size:12px;display:grid;place-items:center}
+.opt:has(input:checked){border-color:var(--p);background:#f1f3ff}
+.opt.ok{border-color:var(--mint);background:#e9fdf7}
+.opt.bad{border-color:#ff6b6b;background:#fff0f0}
+.sect{display:flex;gap:10px;align-items:center;margin:18px 0 10px}
+.sect span{font-size:22px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px}
+.tab{flex:0 0 auto;padding:9px 16px;border-radius:14px;background:#fff;border:1px solid var(--line);font-weight:700;font-size:13px;cursor:pointer;color:var(--mut)}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tab.seen::after{content:" ✓";color:var(--mint)}
+.pbar{height:10px;border-radius:99px;background:#e9ecff;overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--p),var(--pink));transition:width .5s}
+.box{border-radius:18px;padding:14px 16px;font-size:14px}
+.box.b1x{background:#eef0ff}.box.b2x{background:#e9fdf7}.box.b3x{background:#fff1f2}.box.b4x{background:#fff8e1}
+.box h4{font-size:14px;margin-bottom:6px}
+.box ul{padding-left:18px}.box li{margin:3px 0}
+.flow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.flow .fc{padding:7px 12px;border-radius:12px;font-weight:700;font-size:12.5px;color:#fff}
+.flow .ar{color:var(--mut);font-weight:800}
+table.t{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;overflow:hidden;border-radius:16px;border:1px solid var(--line)}
+.t th{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:10px;text-align:left}
+.t td{padding:10px;border-top:1px solid var(--line);vertical-align:top}
+.t tr:nth-child(even) td{background:#fafbff}
+.scroll{overflow-x:auto}
+.meter{margin:8px 0}.meter .ml{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;margin-bottom:3px}
+.meter .mb{height:12px;background:#eef0ff;border-radius:99px;overflow:hidden}
+.meter .mb i{display:block;height:100%;border-radius:99px;transition:width .6s}
+.choice{width:100%;text-align:left;padding:14px;border-radius:16px;border:2px solid var(--line);background:#fff;font:inherit;font-weight:600;cursor:pointer;margin-top:10px;transition:.15s;font-size:14px}
+.choice:hover:not(:disabled){border-color:var(--p);transform:translateX(4px)}
+.choice.ok{border-color:var(--mint);background:#e9fdf7}.choice.bad{border-color:#ff7b7b;background:#fff0f0}.choice.pick{border-color:var(--p);background:#f1f3ff}
+.fb{margin-top:12px;padding:12px 14px;border-radius:14px;font-size:14px}
+.fb.ok{background:#e9fdf7;border-left:5px solid var(--mint)}.fb.bad{background:#fff0f0;border-left:5px solid #ff7b7b}.fb.info{background:#eef0ff;border-left:5px solid var(--p)}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{padding:8px 14px;border-radius:999px;border:2px solid var(--line);background:#fff;font-weight:700;font-size:13px;cursor:pointer}
+.pill.on{background:var(--p);color:#fff;border-color:var(--p)}
+.likert{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.likert .sc{display:flex;gap:6px}
+.likert .sc label{cursor:pointer}
+.likert .sc input{display:none}
+.likert .sc span{width:36px;height:36px;border-radius:12px;border:2px solid var(--line);display:grid;place-items:center;font-weight:800;font-size:13px;transition:.15s}
+.likert .sc input:checked+span{background:var(--p);color:#fff;border-color:var(--p);transform:scale(1.1)}
+@media(max-width:640px){.likert{grid-template-columns:1fr}}
+.nocopy,.nocopy *:not(textarea){-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.nocopy textarea{-webkit-user-select:text;user-select:text}
+.wc{font-size:12px;color:var(--mut);text-align:right;margin-top:4px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:14px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:99;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.sync{position:fixed;right:14px;bottom:14px;font-size:12px;font-weight:700;background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:999px;box-shadow:var(--sh);z-index:30;display:none}
+.modal{position:fixed;inset:0;background:rgba(31,37,71,.5);z-index:60;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.modal.on{display:flex}
+.modal .mc{background:#fff;border-radius:24px;padding:24px;max-width:420px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.modal .mc.wide{max-width:820px;max-height:90vh;overflow:auto}
+.stat{padding:16px;border-radius:18px;color:#fff}
+.stat b{display:block;font-family:Sora;font-size:28px}
+.stat small{font-weight:600;opacity:.9}
+.s1{background:linear-gradient(135deg,#5b6cff,#8a5bff)}.s2{background:linear-gradient(135deg,#1fcfa8,#12b3d6)}.s3{background:linear-gradient(135deg,#ff6bb5,#ff8a5b)}.s4{background:linear-gradient(135deg,#ffc43d,#ff8a5b)}
+.bars{display:grid;gap:12px}.bar-row{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center;font-size:13px;font-weight:700}
+.bar-row .bb{display:grid;gap:4px}.bar-row .bb div{height:14px;border-radius:99px;font-size:10px;color:#fff;padding-left:8px;line-height:14px;min-width:24px}
+.ring{width:100%;max-width:380px;margin:auto;display:block}
+.ring g{cursor:pointer}
+.big{font-family:Sora;font-weight:800;font-size:34px}
+.score{border-radius:20px;padding:18px;text-align:center;color:#fff}
+.chip-s{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:800;background:#eef0ff;color:var(--p)}
+.warn{background:#fff8e1;border:2px dashed #ffc43d;border-radius:16px;padding:12px 14px;font-size:13.5px}
+.kv td{padding:4px 8px;font-size:13px}
+a.lnk{color:var(--p);font-weight:700;cursor:pointer;text-decoration:underline}
+footer{text-align:center;color:var(--mut);font-size:12px;padding:20px}
+*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.btn:hover{transform:none!important}.blob,.sq{display:none}
+</style>
+</head>
+<body>
+<div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div><div class="sq"></div></div>
+
+<header class="top">
+  <div class="top-in">
+    <div class="logo"><i>⟳</i><div><span id="appName">Perencanaan dan Pengembangan Sistem Komputer</span><small id="appSub">MPI Informatika XII</small></div></div>
+    <div class="who" id="who"></div>
+  </div>
+  <nav class="stepper" id="stepper"></nav>
+</header>
+
+<main>
+  <section class="view" id="v-login"></section>
+  <section class="view" id="v-pre"></section>
+  <section class="view" id="v-materi"></section>
+  <section class="view" id="v-sim"></section>
+  <section class="view" id="v-post"></section>
+  <section class="view" id="v-refl"></section>
+  <section class="view" id="v-hasil"></section>
+  <section class="view" id="v-guru"></section>
+</main>
+<footer>MPI Informatika 2026 - Perencanaan dan Pengembangan Sistem Komputer oleh Herry Kurniawan</footer>
+
+<div class="toast" id="toast"></div>
+<div class="sync" id="sync"></div>
+
+<div class="modal" id="mGuru"><div class="mc">
+  <h3>🔐 Masuk Dasbor Guru</h3>
+  <p class="lead" style="margin:6px 0 14px">Masukkan password guru untuk memantau hasil pengerjaan siswa.</p>
+  <div class="field"><input type="password" id="gPw" placeholder="Password guru" autocomplete="off"></div>
+  <div class="row"><button class="btn" id="gGo">Masuk</button><button class="btn alt" id="gCancel">Batal</button></div>
+  <p id="gErr" style="color:#d33;font-size:13px;margin-top:10px;font-weight:600"></p>
+</div></div>
+<div class="modal" id="mDetail"><div class="mc wide" id="mDetailBody"></div></div>
+
+<noscript><div class="card">Aplikasi ini membutuhkan JavaScript.</div></noscript>
+<script src="config.js"></script>
+<script>
+/* ============================================================
+   DATA KONTEN
+   ============================================================ */
+const CFG = window.PPSK_CONFIG || {SCRIPT_URL:""};
+const KELAS = ['XII 2','XII 3','XII 4','XII 5'];
+
+const KOMP=[
+ {k:'CPU',ic:'🧠',c:'#5b6cff',tujuan:'Otak komputer: menjalankan instruksi program dan menghitung.',
+  kegiatan:['Jumlah core/thread menentukan kemampuan multitasking','Clock speed (GHz) menentukan kecepatan per core','Cache besar mempercepat akses data','Dukungan virtualisasi (VT-x/AMD-V) untuk mesin virtual'],
+  keluaran:['Intel Core i5/i7, AMD Ryzen 5/7','Rendering & kompilasi butuh banyak core','Game butuh clock tinggi'],
+  contoh:'Editing video 4K lebih cocok memakai CPU 8 core ke atas daripada 4 core.'},
+ {k:'Penyimpanan',ic:'💾',c:'#ff6bb5',tujuan:'Menyimpan sistem operasi, aplikasi, dan data secara permanen.',
+  kegiatan:['HDD: murah, kapasitas besar, lambat','SSD SATA: jauh lebih cepat dari HDD','SSD NVMe: tercepat, ideal untuk OS dan proyek aktif','RAM: memori kerja sementara (16 GB umum, 32 GB untuk video)'],
+  keluaran:['OS dan aplikasi di SSD','HDD untuk arsip','Siapkan kapasitas cadangan 30%'],
+  contoh:'Proyek video 1 jam bisa 50–100 GB sehingga butuh SSD 1 TB plus HDD arsip.'},
+ {k:'GPU',ic:'🎮',c:'#1fcfa8',tujuan:'Prosesor grafis untuk menampilkan gambar, game, dan mempercepat rendering.',
+  kegiatan:['GPU terintegrasi: hemat, cukup untuk tugas ringan','GPU dedicated (NVIDIA/AMD) punya VRAM sendiri','VRAM menentukan resolusi dan tekstur yang sanggup ditangani','Mempercepat render video dan komputasi paralel'],
+  keluaran:['Desain grafis: GPU entry level','Video: VRAM 8 GB ke atas','Game: GPU kelas menengah-atas'],
+  contoh:'Game 1440p butuh GPU dedicated VRAM 8 GB ke atas, sedangkan Word cukup GPU terintegrasi.'},
+ {k:'Motherboard',ic:'🧩',c:'#ffc43d',tujuan:'Papan induk yang menghubungkan seluruh komponen.',
+  kegiatan:['Socket harus cocok dengan CPU','Chipset menentukan fitur dan peningkatan (upgrade)','Slot RAM, M.2, dan PCIe menentukan ekspansi','Form factor (ATX, mATX, ITX) menentukan ukuran casing'],
+  keluaran:['Cek kompatibilitas socket CPU','Jumlah slot M.2 dan RAM','Kualitas VRM untuk CPU kuat'],
+  contoh:'CPU AMD AM5 tidak bisa dipasang pada motherboard socket LGA1700 milik Intel.'},
+ {k:'Konektivitas',ic:'📡',c:'#34b8ff',tujuan:'Kemampuan terhubung ke jaringan dan perangkat lain.',
+  kegiatan:['LAN Gigabit/2.5G untuk jaringan kabel','Wi-Fi 6/6E dan Bluetooth untuk nirkabel','USB 3.x dan Thunderbolt untuk perangkat cepat','HDMI/DisplayPort untuk monitor'],
+  keluaran:['Prototipe jaringan: banyak port LAN','Gaming: latensi rendah','Video: port USB/Thunderbolt cepat'],
+  contoh:'Lab jaringan membutuhkan minimal dua NIC agar komputer bisa berperan sebagai router.'},
+ {k:'Sistem Operasi',ic:'🖥️',c:'#ff8a5b',tujuan:'Perangkat lunak dasar yang mengelola perangkat keras dan menjalankan aplikasi.',
+  kegiatan:['Windows: kompatibilitas aplikasi dan game terluas','Linux: gratis, stabil, unggul untuk server dan jaringan','macOS: kuat untuk desain dan video, hanya di perangkat Apple','Periksa kompatibilitas aplikasi, driver, dan lisensi'],
+  keluaran:['Pilih OS setelah daftar aplikasi pasti','Perhatikan lisensi legal vs open source','Pertimbangkan dukungan driver'],
+  contoh:'Lab jaringan memakai Ubuntu Linux untuk server, sedangkan game memerlukan Windows.'}
+];
+const SOFT=[
+ {id:'net',ic:'🌐',n:'Prototipe Jaringan',c:'#34b8ff',ring:'Cisco Packet Tracer, GNS3, Wireshark, VirtualBox',
+  ringkas:'Membuat dan menguji rancangan jaringan secara simulasi sebelum membeli perangkat sungguhan.',
+  alur:['Kebutuhan: CPU 4–8 core + virtualisasi','RAM 16 GB (banyak VM)','SSD 512 GB','NIC Gigabit / banyak port'],
+  plus:['CPU multi-core dengan VT-x/AMD-V untuk mesin virtual','RAM besar agar banyak router/VM virtual berjalan','SSD cepat untuk menyimpan image VM'],
+  minus:['GPU dedicated tidak wajib','Monitor layar lebar membantu melihat topologi','Layak membeli adapter LAN tambahan'],
+  cocok:'Praktik topologi, subnetting, routing, dan simulasi keamanan jaringan.',contoh:'Lab TKJ menjalankan 5 router virtual di GNS3 dengan RAM 16 GB.',
+  cmp:['4–8 core + virtualisasi','16 GB','SSD 256–512 GB','Terintegrasi cukup','Gigabit LAN, 2 NIC','Windows / Linux']},
+ {id:'grafis',ic:'🎨',n:'Desain Grafis',c:'#ff6bb5',ring:'Photoshop, Illustrator, CorelDRAW, Figma, GIMP',
+  ringkas:'Mengolah gambar bitmap dan vektor; kualitas warna layar sama pentingnya dengan kecepatan komputer.',
+  alur:['CPU clock tinggi','RAM 16 GB','SSD 512 GB','Monitor sRGB 99%'],
+  plus:['Clock tinggi mempercepat filter dan efek','GPU entry level mempercepat tampilan','Layar akurat warna (sRGB/IPS)'],
+  minus:['Core banyak tidak terlalu berpengaruh','Pen tablet sangat membantu','Kapasitas harus longgar untuk file PSD besar'],
+  cocok:'Poster, logo, UI, dan ilustrasi digital.',contoh:'Photoshop dengan file 500 MB berlapis banyak butuh RAM minimal 16 GB.',
+  cmp:['6 core, clock tinggi','16 GB','SSD 512 GB','Entry (4 GB VRAM)','USB 3 + HDMI/DP','Windows / macOS']},
+ {id:'video',ic:'🎬',n:'Editing Video',c:'#ff8a5b',ring:'Premiere Pro, DaVinci Resolve, Kdenlive, CapCut',
+  ringkas:'Pekerjaan paling berat: decoding, efek, dan rendering memakai CPU, GPU, RAM, dan penyimpanan sekaligus.',
+  alur:['CPU 8+ core','RAM 32 GB','NVMe 1 TB','GPU VRAM 8 GB+'],
+  plus:['Core banyak memangkas waktu render','GPU mempercepat efek dan encoding (NVENC)','NVMe agar timeline tidak patah-patah'],
+  minus:['Butuh pendingin dan PSU berkualitas','Butuh HDD besar untuk arsip','Anggaran paling tinggi'],
+  cocok:'Konten YouTube, film pendek, dan dokumenter sekolah.',contoh:'Video 4K 10 menit dirender 3x lebih cepat dengan GPU dedicated.',
+  cmp:['8+ core','32 GB','NVMe 1 TB + HDD arsip','VRAM 8 GB ke atas','USB 3.2 / Thunderbolt','Windows / macOS']},
+ {id:'game',ic:'🕹️',n:'Aplikasi Gaming',c:'#5b6cff',ring:'Game PC, Steam, emulator, game engine',
+  ringkas:'GPU adalah penentu utama frame rate; CPU clock tinggi mencegah bottleneck.',
+  alur:['GPU kelas menengah-atas','CPU 6–8 core, clock tinggi','RAM 16 GB dual channel','SSD NVMe'],
+  plus:['GPU menentukan FPS dan kualitas visual','NVMe mempercepat loading','Wi-Fi 6/LAN stabil untuk latensi rendah'],
+  minus:['Perlu pendingin yang baik','PSU harus cukup daya','Monitor refresh rate tinggi diperlukan'],
+  cocok:'Game modern, esport, dan pengembangan game.',contoh:'Game 1440p 60 FPS butuh GPU VRAM 8 GB, sedangkan CPU 4 core membatasi FPS.',
+  cmp:['6–8 core, clock tinggi','16 GB dual channel','NVMe 1 TB','Kelas menengah-atas','LAN 2.5G / Wi-Fi 6','Windows']}
+];
+const CMP_ROWS=['CPU','RAM','Penyimpanan','GPU','Konektivitas','Sistem Operasi'];
+
+const PRE=[
+ {t:'pg',q:'Perencanaan dalam pengembangan sistem komputer adalah …',o:['Membeli komputer termurah','Proses menentukan kebutuhan, tujuan, spesifikasi, anggaran, dan langkah sebelum sistem dibangun','Memasang aplikasi setelah komputer jadi','Menunggu kerusakan lalu memperbaikinya','Menyalin spesifikasi dari komputer teman'],a:1},
+ {t:'pg',q:'Manfaat utama perencanaan sebelum membangun sistem komputer adalah …',o:['Sistem tepat guna, hemat biaya, dan risiko berkurang','Sistem pasti tanpa kerusakan','Tidak perlu dokumentasi','Komputer menjadi tercepat di dunia','Anggaran bisa diabaikan'],a:0},
+ {t:'pg',q:'Komponen yang disebut "otak" komputer adalah …',o:['Motherboard','CPU','Power supply','Casing','Heatsink'],a:1},
+ {t:'pg',q:'Komponen paling berpengaruh terhadap frame rate game adalah …',o:['Mouse','Kipas casing','GPU','Kabel LAN','Speaker'],a:2},
+ {t:'pg',q:'Aplikasi Cisco Packet Tracer dan GNS3 digunakan untuk …',o:['Mengedit video','Mendesain logo','Bermain game','Membuat simulasi prototipe jaringan','Membuat presentasi'],a:3},
+ {t:'pgk',q:'Pilih SEMUA langkah yang termasuk perencanaan sistem komputer!',o:['Mengidentifikasi kebutuhan pengguna','Menyusun anggaran','Membeli tanpa survei','Menentukan spesifikasi minimum','Menyusun daftar aplikasi yang akan dipakai'],a:[0,1,3,4]},
+ {t:'pgk',q:'Pilih SEMUA aplikasi yang termasuk editing video!',o:['Adobe Premiere Pro','DaVinci Resolve','Wireshark','Kdenlive','CorelDRAW'],a:[0,1,3]},
+ {t:'pgk',q:'Pilih SEMUA komponen yang kuat dibutuhkan untuk gaming!',o:['GPU dedicated','CPU dengan clock tinggi','Printer','SSD NVMe','Scanner'],a:[0,1,3]},
+ {t:'pgk',q:'Pilih SEMUA yang termasuk konektivitas komputer!',o:['Port LAN','Wi-Fi','Bluetooth','Thermal paste','USB'],a:[0,1,2,4]},
+ {t:'pgk',q:'Pilih SEMUA faktor yang perlu dipertimbangkan saat memilih sistem operasi!',o:['Kompatibilitas aplikasi','Dukungan driver','Lisensi dan biaya','Warna casing','Kebutuhan pengguna'],a:[0,1,2,4]}
+];
+const SIM_A=[
+ {s:'Siswa TKJ ingin merancang topologi 10 router dan menguji routing tanpa membeli perangkat.',a:'net',e:'Simulasi router/VM → prototipe jaringan: butuh virtualisasi dan RAM besar.'},
+ {s:'OSIS membuat poster dan logo menggunakan Photoshop dan Illustrator dengan warna yang akurat.',a:'grafis',e:'Poster dan logo → desain grafis: kualitas layar dan clock CPU penting.'},
+ {s:'Ekskul sinematografi mengedit video dokumenter 4K dan merendernya setiap minggu.',a:'video',e:'Video 4K → butuh CPU banyak core, RAM 32 GB, NVMe, dan GPU kuat.'},
+ {s:'Komunitas esport sekolah ingin bermain game 1440p dengan FPS tinggi.',a:'game',e:'FPS tinggi → GPU kelas menengah-atas dan CPU clock tinggi.'},
+ {s:'Guru ingin siswa mencoba Wireshark dan VirtualBox untuk menganalisis lalu lintas jaringan.',a:'net',e:'Wireshark dan VM → prototipe jaringan, RAM dan virtualisasi penting.'},
+ {s:'Tim kreatif membuat animasi 3D dan menyunting video sekaligus dengan DaVinci Resolve.',a:'video',e:'Rendering berat → profil editing video (CPU, RAM, GPU, NVMe).'}
+];
+const SIM_B=[
+ {s:'Menentukan kecepatan eksekusi instruksi dan jumlah core.',a:0},
+ {s:'Memutuskan apakah kapasitas 1 TB NVMe cukup untuk file proyek video.',a:1},
+ {s:'Mempercepat rendering dan menampilkan game 1440p.',a:2},
+ {s:'Memastikan socket CPU dan slot RAM cocok sebelum membeli.',a:3},
+ {s:'Memilih Wi-Fi 6, port LAN 2.5G, dan USB 3.2.',a:4},
+ {s:'Memilih antara Windows, Linux, atau macOS berdasarkan aplikasi yang dipakai.',a:5},
+ {s:'Mengecek dukungan virtualisasi VT-x untuk menjalankan banyak VM.',a:0},
+ {s:'Memilih SSD sebagai tempat OS dan HDD sebagai arsip.',a:1}
+];
+const SIM_C=[
+ {t:'Perencanaan',ic:'🗓️',c:'#5b6cff',s:'Sekolah menyediakan <b>Rp15 juta</b> untuk 1 PC <b>Studio Multimedia</b> (edit video 1080p dan desain grafis). Langkah pertama?',
+  o:[['Membeli komputer terbaru yang paling mahal',-5,-12,15,'Tanpa analisis, anggaran bisa terpakai pada komponen yang tidak dibutuhkan.'],
+     ['Mendata aplikasi, menentukan spesifikasi minimum, dan menyusun anggaran',10,12,-15,'Tepat! Perencanaan membuat pembelian sesuai kebutuhan dan anggaran.'],
+     ['Menyalin spesifikasi PC gaming teman',0,-5,8,'Kebutuhan gaming berbeda dengan studio multimedia.']]},
+ {t:'CPU',ic:'🧠',c:'#ff6bb5',s:'Pilih CPU untuk editing video 1080p dan desain grafis.',
+  o:[['CPU 2 core dasar agar hemat',-10,5,15,'Rendering video menjadi sangat lambat.'],
+     ['CPU 6–8 core (Ryzen 5/7 atau Core i5/i7)',10,8,-12,'Tepat! Seimbang untuk rendering dan multitasking.'],
+     ['CPU 24 core kelas workstation',3,-12,5,'Berlebihan untuk kebutuhan 1080p dan menghabiskan anggaran.']]},
+ {t:'GPU',ic:'🎮',c:'#1fcfa8',s:'Pilih GPU untuk efek video dan Photoshop.',
+  o:[['GPU terintegrasi saja',-6,0,10,'Efek dan encoding lebih lambat.'],
+     ['GPU dedicated kelas menengah, VRAM 8 GB',10,6,-10,'Tepat! Mempercepat rendering dengan biaya wajar.'],
+     ['GPU gaming kelas tertinggi',4,-14,6,'Kinerja bagus tetapi tidak sebanding harganya.']]},
+ {t:'Penyimpanan',ic:'💾',c:'#ffc43d',s:'Rancang RAM dan penyimpanan untuk proyek video yang besar.',
+  o:[['RAM 8 GB dan HDD 1 TB',-10,-4,14,'Timeline patah-patah dan loading lama.'],
+     ['RAM 32 GB, NVMe 1 TB, HDD 2 TB untuk arsip',12,8,-14,'Tepat! Cepat untuk proyek aktif dan aman untuk arsip.'],
+     ['RAM 128 GB dan NVMe 4 TB',5,-14,4,'Kinerja baik tetapi biaya tidak efisien.']]},
+ {t:'Motherboard & Konektivitas',ic:'🧩',c:'#34b8ff',s:'Pilih motherboard dan konektivitas.',
+  o:[['Motherboard termurah tanpa memeriksa socket dan slot',-12,-5,20,'Risiko tidak kompatibel dan tidak bisa di-upgrade.'],
+     ['Socket cocok, slot M.2/RAM cukup, USB 3.2, LAN, dan Wi-Fi',12,8,-14,'Tepat! Kompatibel dan siap upgrade.'],
+     ['Papan kelas overclock ekstrem',3,-10,6,'Fitur tidak terpakai pada kebutuhan studio.']]},
+ {t:'Sistem Operasi & Software',ic:'🖥️',c:'#ff8a5b',s:'Pilih OS dan aplikasi yang legal untuk sekolah.',
+  o:[['Windows dengan software bajakan',-10,-8,22,'Melanggar lisensi dan berisiko malware.'],
+     ['Windows berlisensi, DaVinci Resolve (gratis), dan GIMP/Inkscape',12,10,-16,'Tepat! Legal, hemat, dan sesuai kebutuhan.'],
+     ['Linux tanpa memeriksa kompatibilitas aplikasi',2,-4,10,'OS bagus, tetapi aplikasi mungkin tidak berjalan.']]}
+];
+const LKPD=[
+ {tp:'Tujuan 1',q:'Jelaskan <b>pengertian perencanaan</b> dalam pengembangan sistem komputer dan sebutkan minimal <b>tiga alasan</b> mengapa perencanaan itu penting.',
+  kw:[/perencanaan/,/kebutuhan/,/anggaran|biaya/,/spesifikasi/,/risiko|kesalahan/,/penting|alasan|karena/,/efisien|hemat|tepat/],
+  rub:'Pengertian (menentukan kebutuhan, tujuan, spesifikasi, anggaran sebelum sistem dibangun) dan 3 alasan (hemat, tepat guna, risiko berkurang, dll).'},
+ {tp:'Tujuan 1',q:'<b>(HOTS)</b> Sebuah sekolah membeli 20 komputer tanpa survei kebutuhan dan hanya memilih harga termurah. Setelah itu guru TKJ, DKV, dan perfilman mengeluh. <u>Analisis</u> kesalahan perencanaannya, risiko jangka panjangnya, lalu susun langkah perencanaan yang benar.',
+  kw:[/survei|analisis kebutuhan|identifikasi/,/anggaran|biaya/,/spesifikasi/,/risiko|kerugian|boros/,/lambat|tidak sesuai|tidak cocok|tidak kompatibel/,/prioritas|jurusan|pengguna/,/langkah|tahap|pertama|kemudian/,/evaluasi|uji|pemeliharaan/],
+  rub:'Kesalahan (tanpa survei, hanya harga), risiko (tidak sesuai, boros, upgrade sulit), langkah (survei, spesifikasi, anggaran, pengadaan, evaluasi).'},
+ {tp:'Tujuan 2',q:'Sebutkan <b>fungsi</b> CPU, penyimpanan, GPU, motherboard, dan konektivitas, serta jelaskan peran <b>sistem operasi</b> dalam sistem komputer.',
+  kw:[/cpu|prosesor/,/penyimpanan|ssd|hdd/,/gpu|grafis/,/motherboard|papan induk/,/konektivitas|lan|wi-?fi|usb/,/sistem operasi|windows|linux/,/mengelola|menjalankan|menghubungkan|menyimpan|menghitung|memproses/],
+  rub:'CPU memproses, penyimpanan menyimpan, GPU grafis, motherboard menghubungkan, konektivitas komunikasi, OS mengelola perangkat dan aplikasi.'},
+ {tp:'Tujuan 2',q:'<b>(HOTS)</b> Seorang siswa memiliki anggaran Rp12 juta untuk satu komputer yang dipakai <u>editing video 1080p</u>, <u>desain grafis</u>, dan <u>simulasi jaringan dengan virtualisasi</u>. <u>Rancang</u> spesifikasi (CPU, RAM, penyimpanan, GPU, motherboard, konektivitas), pilih sistem operasi dan aplikasi, lalu <u>justifikasi</u> prioritas komponen yang dipilih.',
+  kw:[/cpu|prosesor|core/,/ram|16 ?gb|32 ?gb/,/ssd|nvme|penyimpanan/,/gpu|vram/,/motherboard|socket/,/lan|wi-?fi|usb|konektivitas/,/windows|linux|sistem operasi/,/premiere|davinci|photoshop|gimp|packet tracer|gns3|virtualbox|vmware/,/prioritas|karena|alasan|anggaran/,/virtualisasi|vt-x|vm/],
+  rub:'Spesifikasi lengkap sesuai tiga kebutuhan, OS dan aplikasi, prioritas (CPU/RAM/SSD) dengan alasan sesuai anggaran.'}
+];
+
+/* ---------- Refleksi ---------- */
+const REFL_LIK = [
+ {g:'Perencanaan Belajar',ic:'🎯',c:'#5b6cff',items:[
+  'Sebelum belajar, saya menetapkan target apa yang ingin saya kuasai.',
+  'Saya merencanakan cara belajar (mencatat, mencoba simulasi, bertanya).',
+  'Saya yakin mampu memahami materi perencanaan sistem komputer.']},
+ {g:'Pemantauan Diri',ic:'🧭',c:'#1fcfa8',items:[
+  'Saat belajar, saya mengecek apakah saya benar-benar paham.',
+  'Saya tahu bagian materi mana yang masih membingungkan saya.',
+  'Ketika bingung, saya mengganti cara belajar saya.']},
+ {g:'Evaluasi Diri',ic:'🔁',c:'#ff6bb5',items:[
+  'Saya belajar dari kesalahan pada pre-test dan simulasi.',
+  'Saya menjelaskan hasil belajar saya dari usaha dan strategi, bukan hanya nasib.',
+  'Saya tahu langkah apa yang harus saya perbaiki untuk belajar selanjutnya.']}
+];
+const REFL_IMPL = [
+ {id:'i1',q:'Saat pertama kali bertemu soal yang terasa sulit, reaksi PERTAMA yang muncul di pikiran saya adalah …',o:['"Ah, tebak saja."','"Coba baca ulang pelan-pelan dan pecah jadi bagian kecil."','"Cari contoh serupa di materi."','"Tanya teman atau guru."']},
+ {id:'i2',q:'Ketika hasil simulasi saya kurang baik, kalimat yang paling sering terlintas adalah …',o:['"Saya memang tidak bisa."','"Kurang beruntung saja."','"Strategi saya belum tepat, coba lagi dengan cara lain."','"Soalnya terlalu sulit."']},
+ {id:'i3',q:'Perasaan saya selama belajar hari ini paling dekat dengan …',o:['😴 Bosan','😰 Cemas','🙂 Tenang','🤩 Bersemangat']}
+];
+const STRAT = ['Membaca ulang materi','Mencoba simulasi berkali-kali','Membuat catatan sendiri','Mengaitkan dengan aplikasi sehari-hari','Menjelaskan ke teman','Bertanya ke guru','Membuat peta konsep','Istirahat sejenak'];
+const REFL_OPEN = [
+ {id:'o1',q:'Hal terpenting yang saya pelajari hari ini adalah …'},
+ {id:'o2',q:'Bagian yang paling sulit bagi saya dan apa yang saya lakukan untuk mengatasinya …'},
+ {id:'o3',q:'Jika saya mengulang pembelajaran ini, satu hal yang akan saya ubah dari cara belajar saya adalah …'},
+ {id:'o4',q:'Komitmen belajar saya untuk pertemuan berikutnya adalah …'}
+];
+
+/* ============================================================
+   STATE & UTIL
+   ============================================================ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LS='ppsk_xii_state_v1';
+const fresh=()=>({profile:null,stage:'login',pre:null,materi:{seen:{}},sim:{a:null,b:null,c:null},post:{pred:null,ans:['','','',''],viol:{paste:0,copy:0,tab:0,jump:0},submitted:false,auto:null,detail:null},refl:null});
+let S=(()=>{try{return JSON.parse(localStorage.getItem(LS))||fresh()}catch(e){return fresh()}})();
+const UI={tab:0,metode:0,tahap:0,simTab:'a',simA:{i:0,ans:[],done:false},simB:{i:0,ans:[],done:false},simC:{i:0,m:[50,50,50],picks:[],done:false}};
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2800)}
+const wc=s=>(s.trim().match(/\S+/g)||[]).length;
+
+const STEPS=[{id:'pre',t:'Pre-test',n:1},{id:'materi',t:'Materi',n:2},{id:'sim',t:'Simulasi',n:3},{id:'post',t:'Post-test (LKPD)',n:4},{id:'refl',t:'Refleksi',n:5},{id:'hasil',t:'Hasil',n:6}];
+const matSeenAll=()=>Object.keys(S.materi.seen).length>=MAT_TABS.length;
+const simAll=()=>S.sim.a!==null&&S.sim.b!==null&&S.sim.c!==null;
+const unlocked=id=>({pre:true,materi:!!S.pre,sim:!!S.pre&&matSeenAll(),post:!!S.pre&&matSeenAll()&&simAll(),refl:!!S.post.submitted,hasil:!!S.refl})[id];
+const lockMsg={materi:'Selesaikan Pre-test dulu ya 📝',sim:'Buka semua tab Materi dulu 📖',post:'Selesaikan 3 simulasi dulu 🎮',refl:'Kirim Post-test (LKPD) dulu ✍️',hasil:'Isi Refleksi dulu 💭'};
+const isDone=id=>({pre:!!S.pre,materi:matSeenAll(),sim:simAll(),post:!!S.post.submitted,refl:!!S.refl,hasil:!!S.refl})[id];
+
+function go(name){
+  if(name!=='login'&&name!=='guru'&&S.profile){const st=winState(S.profile.kelas);if((st.s==='end'||st.s==='wait'||st.s==='none')&&name!=='hasil'){toast('⏰ '+winMsg(S.profile.kelas,st));name='login'}}
+  if(name!=='login'&&name!=='guru'&&!S.profile){name='login'}
+  if(STEPS.some(s=>s.id===name)&&!unlocked(name)){toast(lockMsg[name]);return}
+  $$('.view').forEach(v=>v.classList.remove('on'));$('#v-'+name).classList.add('on');
+  if(STEPS.some(s=>s.id===name)){S.stage=name;save()}
+  ({login:rLogin,pre:rPre,materi:rMateri,sim:rSim,post:rPost,refl:rRefl,hasil:rHasil,guru:rGuru})[name]();
+  renderStepper(name);window.scrollTo({top:0,behavior:'smooth'});
+  document.body.dataset.view=name;
+}
+function renderStepper(cur){
+  const st=$('#stepper'),who=$('#who');
+  if(!S.profile||cur==='login'||cur==='guru'){st.style.display='none';who.style.display=cur==='guru'?'block':'none';if(cur==='guru')who.textContent='👩‍🏫 Mode Guru';return}
+  st.style.display='flex';who.style.display='block';who.textContent=`👤 ${S.profile.nama} • ${S.profile.kelas}`;
+  st.innerHTML=STEPS.map(s=>`<div class="step ${s.id===cur?'on':''} ${isDone(s.id)&&s.id!==cur?'done':''} ${unlocked(s.id)?'':'lock'}" data-go="${s.id}"><span class="n">${isDone(s.id)&&s.id!==cur?'✓':s.n}</span>${s.t}</div>`).join('');
+  $$('.step',st).forEach(e=>e.onclick=()=>go(e.dataset.go));
+}
+
+/* ============================================================
+   SINKRONISASI (Google Sheet)
+   ============================================================ */
+function record(){
+  const p=S.profile,pr=S.pre,po=S.post,si=S.sim;
+  return {id:p.nis+'|'+p.kelas,waktu_update:new Date().toLocaleString('id-ID'),nama:p.nama,nis:p.nis,kelas:p.kelas,tanggal:p.tanggal,tahap:S.stage,
+   pre_pg:pr?pr.pg:'',pre_pgk:pr?pr.pgk:'',pre_total:pr?pr.total:'',pre_jawaban:pr?JSON.stringify(pr.ans):'',
+   sim_a:si.a??'',sim_b:si.b??'',sim_c:si.c??'',prediksi:po.pred??'',
+   post_1:po.ans[0],post_2:po.ans[1],post_3:po.ans[2],post_4:po.ans[3],post_auto:po.auto??'',post_detail:po.detail?JSON.stringify(po.detail):'',
+   pelanggaran:JSON.stringify(po.viol),refleksi:S.refl?JSON.stringify(S.refl):'',status:S.refl?'Selesai':'Berjalan'};
+}
+let syncT;
+function sync(now){clearTimeout(syncT);syncT=setTimeout(doSync,now?0:500)}
+async function doSync(){
+  save();if(!S.profile)return;
+  const b=$('#sync');b.style.display='block';
+  if(S.profile.demo){b.textContent='🎬 Mode demo — tidak dikirim ke Google Sheet';return}
+  if(!CFG.SCRIPT_URL){b.textContent='💾 Mode lokal (belum terhubung Google Sheet)';return}
+  b.textContent='⏳ Menyimpan…';
+  try{
+    const r=await fetch(CFG.SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'save',data:record()})});
+    const j=await r.json();b.textContent=j.ok?'✅ Tersimpan ke Google Sheet':'⚠️ Gagal: '+(j.error||'');
+  }catch(e){b.textContent='⚠️ Offline — data disimpan di perangkat, akan dikirim ulang'}
+  setTimeout(()=>{if(b.textContent.startsWith('✅'))b.style.display='none'},2500);
+}
+async function api(action,extra){
+  const r=await fetch(CFG.SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...extra})});
+  return r.json();
+}
+
+
+/* ============================================================
+   JADWAL PENGERJAAN PER KELAS (diatur guru, waktu WIB)
+   ============================================================ */
+let JADWAL={},SRV=0,JOK=false;
+async function loadJadwal(){if(!CFG.SCRIPT_URL)return;try{const j=await api('getSchedule',{});if(j.ok){JADWAL=j.jadwal||{};SRV=j.now-Date.now();JOK=true}}catch(e){JOK=false}}
+function winState(kelas){
+  if(!CFG.SCRIPT_URL)return {s:'open'};
+  if(!JOK)return {s:'err'};
+  const w=JADWAL[kelas];if(!w||!w.mulai||!w.selesai)return {s:'none'};
+  const t=Date.now()+SRV,a=Date.parse(w.mulai),b=Date.parse(w.selesai);
+  return t<a?{s:'wait',w}:t>b?{s:'end',w}:{s:'open',w};
+}
+const fmtW=iso=>new Date(Date.parse(iso)+7*36e5).toLocaleString('id-ID',{timeZone:'UTC',weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}).replace(/\./g,':')+' WIB';
+const toLocalIn=iso=>iso?new Date(Date.parse(iso)+7*36e5).toISOString().slice(0,16):'';
+const winMsg=(k,st)=>({err:'Jadwal tidak dapat diperiksa. Periksa koneksi internet lalu coba lagi.',none:`Kelas ${k} belum dijadwalkan oleh guru.`,
+  wait:st.w?`Pengerjaan kelas ${k} dimulai ${fmtW(st.w.mulai)}.`:'',end:st.w?`Waktu pengerjaan kelas ${k} telah berakhir (${fmtW(st.w.selesai)}).`:''})[st.s];
+setInterval(async()=>{
+  if(!S.profile||!CFG.SCRIPT_URL)return;
+  const v=document.body.dataset.view;if(v==='login'||v==='guru')return;
+  await loadJadwal();const st=winState(S.profile.kelas);
+  if(st.s==='end'||st.s==='none'||st.s==='wait'){if(v!=='hasil'){toast('⏰ '+winMsg(S.profile.kelas,st));go(S.refl?'hasil':'login')}}
+},60000);
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+function rLogin(){
+  const today=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+  const p=S.profile||{};
+  $('#v-login').innerHTML=`<div class="hero">
+   <div><span class="tag">✨ Media Pembelajaran Interaktif</span>
+    <h1>Rancang <span class="grad">Sistem Komputer</span> yang Tepat Sasaran</h1>
+    <p class="lead">Belajar lewat materi, simulasi proyek, refleksi diri, dan LKPD. Kamu akan menjadi <b>perencana sistem</b> yang memilih perangkat lunak, OS, dan spesifikasi terbaik!</p>
+    <div class="row" style="margin-top:16px"><span class="tag mint">🎯 Menjelaskan perencanaan</span><span class="tag pink">🛠️ Mengidentifikasi kebutuhan</span><span class="tag yel">💭 Refleksi diri</span></div>
+    <div class="illu" style="margin-top:20px;min-height:170px"><div style="font-family:Sora;font-weight:800;font-size:22px;text-align:center" class="grad">Rencana → Kebutuhan → Spesifikasi → Rakit</div></div>
+   </div>
+   <div class="card" style="margin:0"><h2>👋 Yuk, Masuk!</h2><p class="lead" style="margin-bottom:16px">Isi data dirimu dengan benar. Hasil belajarmu tersimpan otomatis.</p>
+    <form id="fLogin" autocomplete="off">
+     <div class="field"><label class="l">Nama Lengkap</label><input type="text" id="lNama" placeholder="Contoh: Aisyah Putri" value="${esc(p.nama||'')}" maxlength="60"></div>
+     <div class="field"><label class="l">NIS</label><input type="text" id="lNis" inputmode="numeric" placeholder="Nomor Induk Siswa" value="${esc(p.nis||'')}" maxlength="12"></div>
+     <div class="grid2"><div class="field"><label class="l">Tanggal</label><input type="date" id="lTgl" value="${esc(p.tanggal||today)}"></div>
+     <div class="field"><label class="l">Kelas</label><select id="lKelas"><option value="">Pilih kelas…</option>${KELAS.map(k=>`<option ${p.kelas===k?'selected':''}>${k}</option>`).join('')}</select></div></div>
+     <button class="btn" style="width:100%" type="submit">Masuk &amp; Mulai Belajar 🚀</button>
+     <p id="lErr" style="color:#d33;font-weight:600;font-size:13px;margin-top:10px"></p>
+    </form>
+    <div style="text-align:center;margin-top:12px"><a class="lnk" id="lGuru" style="font-size:13px">🔐 Masuk Dasbor Guru</a></div>
+   </div></div>`;
+  $('#fLogin').onsubmit=async e=>{
+    e.preventDefault();
+    const nama=$('#lNama').value.trim().replace(/\s+/g,' '),nis=$('#lNis').value.trim(),tgl=$('#lTgl').value,kelas=$('#lKelas').value,er=$('#lErr');
+    if(nama.length<3)return er.textContent='Nama minimal 3 huruf.';
+    if(!/^\d{4,12}$/.test(nis))return er.textContent='NIS harus berupa angka (4–12 digit).';
+    if(!tgl)return er.textContent='Tanggal wajib diisi.';
+    if(!kelas)return er.textContent='Pilih kelasmu.';
+    er.textContent='Memeriksa jadwal…';await loadJadwal();er.textContent='';
+    {const st=winState(kelas);if(st.s!=='open')return er.textContent='⏰ '+winMsg(kelas,st)}
+    const same=S.profile&&S.profile.nis===nis&&S.profile.kelas===kelas;
+    if(!same)S=fresh();
+    S.profile={nama,nis,kelas,tanggal:tgl};
+    Object.assign(UI,{tab:0,simA:{i:0,ans:[],done:false},simB:{i:0,ans:[],done:false},simC:{i:0,m:[50,50,50],picks:[],done:false}});
+    save();sync(true);
+    const next=same&&S.stage&&unlocked(S.stage)&&S.stage!=='login'?S.stage:'pre';
+    toast(same?`Selamat datang kembali, ${nama.split(' ')[0]}! 👋`:`Halo ${nama.split(' ')[0]}, selamat belajar! 🎉`);
+    go(next);
+  };
+  $('#lGuru').onclick=()=>{$('#gPw').value='';$('#gErr').textContent='';$('#mGuru').classList.add('on');setTimeout(()=>$('#gPw').focus(),50)};
+}
+
+/* ============================================================
+   PRE-TEST
+   ============================================================ */
+const L='ABCDE';
+function qBlock(q,i,pref,num){
+  const inp=q.t==='pgk'?'checkbox':'radio';
+  return `<div class="q"><div class="qn"><b>${num}</b><div>${q.q}</div></div>${q.o.map((o,j)=>`<label class="opt"><input type="${inp}" name="${pref}${i}" value="${j}"><span class="lt">${L[j]}</span><span>${esc(o)}</span></label>`).join('')}</div>`;
+}
+function scorePre(ans){
+  let pg=0,pgk=0;
+  PRE.forEach((q,i)=>{
+    if(q.t==='pg'){if(ans[i][0]===q.a)pg+=10}
+    else{const c=ans[i].filter(x=>q.a.includes(x)).length,w=ans[i].length-c;pgk+=Math.max(0,c-w)/q.a.length*10}
+  });
+  pgk=Math.round(pgk*10)/10;
+  return {pg,pgk,total:Math.round((pg+pgk)*10)/10,ans};
+}
+function rPre(){
+  const v=$('#v-pre');
+  if(S.pre){
+    v.innerHTML=`<div class="card" style="text-align:center"><span class="tag mint">✅ Pre-test selesai</span><h2 style="margin-top:10px">Pre-test sudah kamu kerjakan!</h2>
+    <p class="lead">Ini titik awalmu. Jangan khawatir soal-soal yang belum bisa, itulah yang akan kamu pelajari.</p>
+    <div class="grid3" style="margin:18px 0;max-width:640px;margin-inline:auto"><div class="score s1"><div class="big">${S.pre.pg}</div>PG (maks 50)</div><div class="score s3"><div class="big">${S.pre.pgk}</div>PG Kompleks (maks 50)</div><div class="score s2"><div class="big">${S.pre.total}</div>Total / 100</div></div>
+    <button class="btn" id="toMat">Lanjut ke Materi 📖</button></div>`;
+    $('#toMat').onclick=()=>go('materi');return;
+  }
+  v.innerHTML=`<div class="card"><span class="tag">📝 Langkah 1</span><h2 style="margin-top:8px">Pre-test: Seberapa Kamu Tahu?</h2>
+   <p class="lead">Kerjakan jujur dan mandiri untuk mengetahui kemampuan awalmu. Bagian A: 5 soal pilihan ganda. Bagian B: 5 soal pilihan ganda kompleks (jawaban benar bisa lebih dari satu). Pre-test hanya bisa dikirim sekali.</p></div>
+   <div class="sect"><span>🅰️</span><h3>Bagian A — Pilihan Ganda (pilih 1 jawaban)</h3></div>
+   ${PRE.slice(0,5).map((q,i)=>qBlock(q,i,'p',i+1)).join('')}
+   <div class="sect"><span>🅱️</span><h3>Bagian B — Pilihan Ganda Kompleks (pilih semua yang benar)</h3></div>
+   ${PRE.slice(5).map((q,i)=>qBlock(q,i+5,'p',i+6)).join('')}
+   <div class="row" style="justify-content:space-between"><span id="preInfo" class="lead"></span><button class="btn mint" id="preGo">Kirim Pre-test ✅</button></div>`;
+  const upd=()=>{let n=0;PRE.forEach((q,i)=>{if($$(`input[name=p${i}]:checked`).length)n++});$('#preInfo').textContent=`Terjawab ${n}/10`};
+  $$('#v-pre input').forEach(x=>x.onchange=upd);upd();
+  $('#preGo').onclick=()=>{
+    const ans=PRE.map((q,i)=>$$(`input[name=p${i}]:checked`).map(x=>+x.value));
+    const miss=ans.findIndex(a=>!a.length);
+    if(miss>=0){toast(`Soal nomor ${miss+1} belum dijawab`);$$('.q')[miss].scrollIntoView({behavior:'smooth',block:'center'});return}
+    S.pre=scorePre(ans);save();sync(true);toast('Pre-test terkirim! 🎉');go('pre');
+  };
+}
+
+/* ============================================================
+   MATERI
+   ============================================================ */
+const MAT_TABS=['🗓️ Perencanaan','🧰 Kebutuhan Software','🖥️ Sistem Operasi','⚙️ Spesifikasi Teknis','⚖️ Perbandingan','🏫 Studi Kasus','📌 Rangkuman'];
+function rMateri(){
+  S.materi.seen[UI.tab]=1;save();
+  const n=Object.keys(S.materi.seen).length;
+  $('#v-materi').innerHTML=`<div class="card"><span class="tag pink">📖 Langkah 2</span><h2 style="margin-top:8px">Materi Pembelajaran</h2>
+   <div class="row" style="justify-content:space-between;margin:8px 0 6px"><span class="lead">Buka semua tab untuk membuka simulasi</span><b>${n}/${MAT_TABS.length}</b></div><div class="pbar"><i style="width:${n/MAT_TABS.length*100}%"></i></div></div>
+   <div class="tabs">${MAT_TABS.map((t,i)=>`<div class="tab ${UI.tab===i?'on':''} ${S.materi.seen[i]?'seen':''}" data-t="${i}">${t}</div>`).join('')}</div>
+   <div id="matBody"></div>
+   <div class="row" style="justify-content:space-between;margin-top:6px"><button class="btn alt" id="mPrev" ${UI.tab===0?'disabled':''}>← Sebelumnya</button>
+   ${UI.tab<MAT_TABS.length-1?'<button class="btn" id="mNext">Berikutnya →</button>':`<button class="btn mint" id="mSim" ${matSeenAll()?'':'disabled'}>Mulai Simulasi 🎮</button>`}</div>`;
+  $$('#v-materi .tab').forEach(e=>e.onclick=()=>{UI.tab=+e.dataset.t;rMateri();renderStepper('materi')});
+  const mp=$('#mPrev'),mn=$('#mNext'),ms=$('#mSim');
+  if(mp)mp.onclick=()=>{UI.tab--;rMateri();window.scrollTo({top:0})};
+  if(mn)mn.onclick=()=>{UI.tab++;rMateri();window.scrollTo({top:0});renderStepper('materi')};
+  if(ms)ms.onclick=()=>go('sim');
+  [mKonsep,mMetode,mOS,mTahap,mBanding,mKasus,mRangkum][UI.tab]($('#matBody'));
+}
+function mKonsep(el){
+  const st=[['1','Identifikasi kebutuhan','Siapa penggunanya, aplikasi apa yang dipakai, seberapa berat pekerjaannya.'],['2','Tentukan spesifikasi','CPU, RAM, penyimpanan, GPU, motherboard, konektivitas, dan OS.'],['3','Susun anggaran','Prioritaskan komponen yang paling memengaruhi kinerja.'],['4','Pilih & beli','Bandingkan produk, cek kompatibilitas, garansi, dan lisensi.'],['5','Rakit, instal, uji','Pasang OS dan aplikasi lalu uji kinerja.'],['6','Evaluasi & rawat','Periksa hasil, dokumentasikan, siapkan upgrade.']];
+  el.innerHTML=`<div class="card"><h2>Pengertian Perencanaan Sistem Komputer</h2>
+  <p>Sistem komputer terdiri atas <b>perangkat keras (hardware)</b>, <b>perangkat lunak (software)</b>, dan <b>pengguna (brainware)</b>. <b>Perencanaan</b> adalah proses menentukan kebutuhan, tujuan, spesifikasi, anggaran, dan langkah kerja <i>sebelum</i> sistem dibangun atau dibeli, agar hasilnya sesuai kebutuhan.</p>
+  <div class="grid2" style="margin-top:14px"><div class="box b1x"><h4>🎯 Tujuan perencanaan</h4><ul><li>Sistem sesuai kebutuhan pengguna</li><li>Anggaran terkendali</li><li>Mudah dikembangkan (upgrade)</li><li>Kinerja optimal dan lisensi legal</li></ul></div>
+  <div class="box b3x"><h4>⚠️ Tanpa perencanaan</h4><ul><li>Spesifikasi kurang atau berlebihan</li><li>Komponen tidak kompatibel</li><li>Anggaran terbuang</li><li>Pekerjaan terhambat dan perlu membeli ulang</li></ul></div></div>
+  <div class="box b4x" style="margin-top:14px"><h4>🤔 Mengapa penting?</h4>Kesalahan yang ditemukan sejak perencanaan jauh lebih murah diperbaiki dibanding setelah komputer dibeli. Perencanaan membuat keputusan berbasis data, bukan sekadar harga atau merek.</div>
+  <h3 style="margin:16px 0 8px">6 Langkah Perencanaan</h3><div class="grid3">${st.map(x=>`<div class="box b${(+x[0]-1)%4+1}x"><h4>${x[0]}. ${x[1]}</h4>${x[2]}</div>`).join('')}</div>
+  <div class="box b2x" style="margin-top:14px"><h4>💡 Analogi</h4>Seperti memilih kendaraan: truk untuk angkut barang, motor untuk lincah di kota. Komputer juga dipilih sesuai <b>fungsi</b> utamanya.</div></div>`;
+}
+function mMetode(el){
+  const m=SOFT[UI.metode];
+  el.innerHTML=`<div class="card"><h2>Kebutuhan Perangkat Lunak</h2><p class="lead">Pilih jenis pekerjaan untuk melihat kebutuhan sistemnya.</p>
+  <div class="pills" style="margin:12px 0">${SOFT.map((x,i)=>`<div class="pill ${i===UI.metode?'on':''}" data-m="${i}">${x.ic} ${x.n}</div>`).join('')}</div>
+  <div style="border-left:6px solid ${m.c};padding-left:16px"><h3 style="font-size:24px">${m.ic} ${m.n}</h3><span class="chip-s">${m.ring}</span><p style="margin:8px 0">${m.ringkas}</p>
+   <h4>Kebutuhan inti</h4><div class="flow">${m.alur.map((a,i)=>`<span class="fc" style="background:${m.c}">${a}</span>${i<m.alur.length-1?'<span class="ar">+</span>':''}`).join('')}</div></div>
+  <div class="grid2" style="margin-top:14px"><div class="box b2x"><h4>✅ Yang diprioritaskan</h4><ul>${m.plus.map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="box b3x"><h4>📝 Catatan</h4><ul>${m.minus.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+  <div class="grid2" style="margin-top:14px"><div class="box b1x"><h4>🎯 Dipakai untuk</h4>${m.cocok}</div><div class="box b4x"><h4>📱 Contoh</h4>${m.contoh}</div></div></div>`;
+  $$('.pill',el).forEach(p=>p.onclick=()=>{UI.metode=+p.dataset.m;mMetode(el)});
+}
+function mOS(el){
+  const o=[['🪟 Windows','Kompatibilitas aplikasi dan game terluas; driver lengkap','Berlisensi berbayar; rentan malware bila tidak dirawat','Desain, video, gaming, perkantoran'],['🐧 Linux','Gratis dan open source; stabil, ringan; unggul untuk jaringan dan server','Aplikasi komersial terbatas; kurva belajar','Prototipe jaringan, server, pemrograman'],['🍎 macOS','Terintegrasi, andal untuk desain dan video','Hanya di perangkat Apple; harga tinggi','Desain grafis, editing video']];
+  el.innerHTML=`<div class="card"><h2>Memilih Sistem Operasi</h2><p class="lead">Sistem operasi (OS) mengelola CPU, memori, penyimpanan, dan perangkat, serta menjalankan aplikasi.</p>
+  <div class="scroll" style="margin-top:10px"><table class="t"><thead><tr><th>OS</th><th>Kelebihan</th><th>Kekurangan</th><th>Cocok untuk</th></tr></thead><tbody>${o.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody></table></div>
+  <div class="box b4x" style="margin-top:14px"><h4>🧭 Kriteria memilih OS</h4><ul><li>Daftar aplikasi wajib dan kompatibilitasnya</li><li>Dukungan driver perangkat keras</li><li>Lisensi, biaya, dan legalitas</li><li>Keamanan dan kemudahan perawatan</li><li>Kemampuan pengguna</li></ul></div>
+  <div class="box b3x" style="margin-top:14px"><h4>🔑 Spesifikasi minimum vs rekomendasi</h4>Minimum hanya agar bisa berjalan; <b>direkomendasikan</b> agar nyaman. Rencanakan mendekati rekomendasi.</div></div>`;
+}
+function mTahap(el){
+  const R=118,cx=170,cy=170;
+  const nodes=KOMP.map((t,i)=>{const a=(-90+i*60)*Math.PI/180;return {x:cx+R*Math.cos(a),y:cy+R*Math.sin(a),t,i}});
+  const T=KOMP[UI.tahap];
+  el.innerHTML=`<div class="card"><h2>Spesifikasi Teknis Sistem Komputer</h2><p class="lead">Klik lingkaran untuk melihat tiap komponen.</p>
+  <div class="grid2" style="align-items:center;margin-top:10px"><svg class="ring" viewBox="0 0 340 350">
+   <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#dfe3ff" stroke-width="3" stroke-dasharray="4 8"/>
+   <text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="Sora" font-weight="800" font-size="24" fill="#5b6cff">KOMPUTER</text><text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="11" fill="#6a7196" font-weight="700">Hardware + OS</text>
+   ${nodes.map(n=>`<g data-i="${n.i}" style="cursor:pointer"><circle cx="${n.x}" cy="${n.y}" r="${UI.tahap===n.i?36:31}" fill="${n.t.c}" ${UI.tahap===n.i?'stroke="#1f2547" stroke-width="3"':''}/><text x="${n.x}" y="${n.y+7}" text-anchor="middle" font-size="22">${n.t.ic}</text><text x="${n.x}" y="${n.y+(n.y<cy?-42:50)}" text-anchor="middle" font-size="10.5" font-weight="800" fill="#1f2547">${n.t.k}</text></g>`).join('')}
+  </svg>
+  <div><span class="tag" style="background:${T.c};color:#fff">Komponen ${UI.tahap+1}</span><h3 style="margin-top:8px;font-size:22px">${T.ic} ${T.k}</h3><p>${T.tujuan}</p>
+   <div class="box b1x" style="margin-top:10px"><h4>🔍 Yang perlu diketahui</h4><ul>${T.kegiatan.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+   <div class="box b2x" style="margin-top:10px"><h4>✅ Tips memilih</h4><ul>${T.keluaran.map(x=>`<li>${x}</li>`).join('')}</ul></div></div></div>
+   <div class="box b4x" style="margin-top:14px"><h4>💡 Contoh</h4>${T.contoh}</div></div>`;
+  $$('.ring g',el).forEach(g=>g.onclick=()=>{UI.tahap=+g.dataset.i;mTahap(el)});
+}
+function mBanding(el){
+  el.innerHTML=`<div class="card"><h2>Perbandingan Kebutuhan</h2><p class="lead">Geser tabel ke samping di HP.</p><div class="scroll" style="margin-top:10px"><table class="t"><thead><tr><th>Komponen</th>${SOFT.map(m=>`<th>${m.ic} ${m.n}</th>`).join('')}</tr></thead><tbody>
+  ${CMP_ROWS.map((r,i)=>`<tr><td><b>${r}</b></td>${SOFT.map(m=>`<td>${m.cmp[i]}</td>`).join('')}</tr>`).join('')}
+  <tr><td><b>Motherboard</b></td><td colspan="4">Socket cocok dengan CPU, slot RAM/M.2 cukup, dan siap upgrade (berlaku untuk semua profil)</td></tr></tbody></table></div>
+  <div class="box b4x" style="margin-top:14px"><h4>🧠 Prioritas</h4><ul><li>Jaringan: <b>RAM + CPU virtualisasi</b></li><li>Desain: <b>clock CPU + layar</b></li><li>Video: <b>CPU + GPU + NVMe</b></li><li>Gaming: <b>GPU</b></li></ul></div></div>`;
+}
+function mKasus(el){
+  const k=[['Lab TKJ (20 PC)','Prototipe jaringan, Linux','Core i5/Ryzen 5, 16 GB, SSD 512 GB, 2 NIC','Windows + Ubuntu dual boot'],['Studio Multimedia (1 PC)','Video 1080p + desain','Ryzen 7, 32 GB, NVMe 1 TB, GPU 8 GB','Windows berlisensi'],['Ruang Esport (10 PC)','Gaming 1080p–1440p','Core i5/Ryzen 5, 16 GB, NVMe 512 GB, GPU 8 GB','Windows']];
+  el.innerHTML=`<div class="card"><h2>🏫 Studi Kasus: Perencanaan Fasilitas Sekolah</h2><p class="lead">Satu sekolah, tiga kebutuhan, tiga spesifikasi berbeda.</p>
+  <div class="scroll" style="margin-top:10px"><table class="t"><thead><tr><th>Ruang</th><th>Kebutuhan</th><th>Spesifikasi</th><th>OS</th></tr></thead><tbody>${k.map(r=>`<tr>${r.map((x,i)=>`<td>${i?x:'<b>'+x+'</b>'}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  <div class="box b1x" style="margin-top:14px"><h4>📋 Daftar periksa perencanaan</h4><ul><li>Pengguna dan aplikasi utama sudah didata</li><li>Spesifikasi minimum dan rekomendasi dicek</li><li>Komponen kompatibel (socket, slot, daya)</li><li>Anggaran dan cadangan 10–15%</li><li>Lisensi legal</li><li>Rencana upgrade</li></ul></div></div>`;
+}
+function mRangkum(el){
+  el.innerHTML=`<div class="card"><h2>📌 Rangkuman</h2><div class="grid2"><div class="box b1x"><h4>Tujuan 1 — Perencanaan</h4><ul><li>Perencanaan = menentukan kebutuhan, spesifikasi, anggaran sebelum membangun</li><li>Manfaat: tepat guna, hemat, risiko kecil</li><li>6 langkah: kebutuhan → spesifikasi → anggaran → beli → rakit/uji → evaluasi</li></ul></div>
+  <div class="box b2x"><h4>Tujuan 2 — Kebutuhan sistem</h4><ul>${SOFT.map(m=>`<li><b>${m.n}</b>: ${m.alur[0]}</li>`).join('')}<li>OS dipilih sesuai aplikasi, driver, lisensi</li></ul></div></div>
+  <div class="box b3x" style="margin-top:14px"><h4>🔑 Pesan kunci</h4>Tidak ada komputer terbaik untuk semua orang. Spesifikasi terbaik adalah yang <b>paling sesuai kebutuhan dan anggaran</b>.</div></div>`;
+}
+
+/* ============================================================
+   SIMULASI
+   ============================================================ */
+function rSim(){
+  const st={a:S.sim.a!==null,b:S.sim.b!==null,c:S.sim.c!==null};
+  $('#v-sim').innerHTML=`<div class="card"><span class="tag mint">🎮 Langkah 3</span><h2 style="margin-top:8px">Simulasi: Jadilah Perencana Sistem Komputer!</h2>
+  <p class="lead">Selesaikan 3 simulasi. Skor percobaan pertama yang dicatat; kamu boleh mengulang untuk latihan.</p></div>
+  <div class="tabs"><div class="tab ${UI.simTab==='a'?'on':''} ${st.a?'seen':''}" data-s="a">🧭 A. Kenali Kebutuhan (Tujuan 2)</div><div class="tab ${UI.simTab==='b'?'on':''} ${st.b?'seen':''}" data-s="b">🧩 B. Komponen (Tujuan 2)</div><div class="tab ${UI.simTab==='c'?'on':''} ${st.c?'seen':''}" data-s="c">🏗️ C. Rakit PC Studio (Tujuan 1 &amp; 2)</div></div>
+  <div id="simBody"></div>
+  <div class="row" style="justify-content:flex-end"><button class="btn mint" id="simNext" ${simAll()?'':'disabled'}>Lanjut ke Post-test (LKPD) ✍️</button></div>`;
+  $$('#v-sim .tab').forEach(e=>e.onclick=()=>{UI.simTab=e.dataset.s;rSim()});
+  $('#simNext').onclick=()=>go('post');
+  ({a:simA,b:simB,c:simC})[UI.simTab]($('#simBody'));
+}
+function simA(el){
+  const U=UI.simA;
+  if(U.done){const sc=U.ans.filter((x,i)=>x===SIM_A[i].a).length;
+    el.innerHTML=`<div class="card" style="text-align:center"><h2>🏁 Simulasi A selesai!</h2><div class="big grad">${sc}/${SIM_A.length}</div><p class="lead">Kamu tepat mengenali kebutuhan pada ${sc} dari ${SIM_A.length} kasus.${S.sim.a!==null&&S.sim.a!==sc?` (Skor tercatat: ${S.sim.a}, percobaan pertama.)`:''}</p><button class="btn alt" id="again">🔁 Ulangi</button></div>`;
+    $('#again').onclick=()=>{UI.simA={i:0,ans:[],done:false};simA(el)};return}
+  const q=SIM_A[U.i];
+  el.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><span class="tag">Kasus ${U.i+1}/${SIM_A.length}</span><span class="lead">Kebutuhan sistem apa yang paling dominan?</span></div>
+   <div class="box b1x" style="margin:12px 0;font-size:15px">📋 ${q.s}</div>
+   <div class="grid3">${SOFT.map(m=>`<button class="choice" data-id="${m.id}" style="margin:0">${m.ic} ${m.n}</button>`).join('')}</div><div id="fbA"></div></div>`;
+  $$('.choice',el).forEach(b=>b.onclick=()=>{
+    const ok=b.dataset.id===q.a;U.ans[U.i]=b.dataset.id;
+    $$('.choice',el).forEach(x=>{x.disabled=true;if(x.dataset.id===q.a)x.classList.add('ok');});if(!ok)b.classList.add('bad');
+    $('#fbA').innerHTML=`<div class="fb ${ok?'ok':'bad'}">${ok?'✅ Tepat! ':'❌ Kurang tepat. Jawaban: <b>'+SOFT.find(m=>m.id===q.a).n+'</b>. '}${q.e}</div><div style="margin-top:12px"><button class="btn" id="nx">${U.i<SIM_A.length-1?'Kasus berikutnya →':'Lihat hasil 🏁'}</button></div>`;
+    $('#nx').onclick=()=>{if(U.i<SIM_A.length-1){U.i++}else{U.done=true;if(S.sim.a===null){S.sim.a=U.ans.filter((x,i)=>x===SIM_A[i].a).length;sync(true);renderStepper('sim');toast('Simulasi A tersimpan ✅')}}rSim()};
+  });
+}
+function simB(el){
+  const U=UI.simB;
+  if(U.done){const sc=U.ans.filter((x,i)=>x===SIM_B[i].a).length;
+    el.innerHTML=`<div class="card" style="text-align:center"><h2>🏁 Simulasi B selesai!</h2><div class="big grad">${sc}/${SIM_B.length}</div><p class="lead">Kamu menempatkan ${sc} dari ${SIM_B.length} pernyataan pada komponen yang benar.${S.sim.b!==null&&S.sim.b!==sc?` (Skor tercatat: ${S.sim.b}.)`:''}</p><button class="btn alt" id="again">🔁 Ulangi</button></div>`;
+    $('#again').onclick=()=>{UI.simB={i:0,ans:[],done:false};simB(el)};return}
+  const q=SIM_B[U.i];
+  el.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><span class="tag pink">Pernyataan ${U.i+1}/${SIM_B.length}</span><span class="lead">Pernyataan ini terkait komponen apa?</span></div>
+   <div class="box b4x" style="margin:12px 0;font-size:16px;font-weight:700">🛠️ ${q.s}</div>
+   <div class="grid3">${KOMP.map((t,i)=>`<button class="choice" data-i="${i}" style="margin:0;border-left:6px solid ${t.c}">${t.ic} ${t.k}</button>`).join('')}</div><div id="fbB"></div></div>`;
+  $$('.choice',el).forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i,ok=i===q.a;U.ans[U.i]=i;
+    $$('.choice',el).forEach(x=>{x.disabled=true;if(+x.dataset.i===q.a)x.classList.add('ok')});if(!ok)b.classList.add('bad');
+    $('#fbB').innerHTML=`<div class="fb ${ok?'ok':'bad'}">${ok?'✅ Benar!':'❌ Tahap yang benar: <b>'+KOMP[q.a].k+'</b>.'} Tips memilih: ${KOMP[q.a].keluaran.join(', ')}.</div><div style="margin-top:12px"><button class="btn" id="nx">${U.i<SIM_B.length-1?'Berikutnya →':'Lihat hasil 🏁'}</button></div>`;
+    $('#nx').onclick=()=>{if(U.i<SIM_B.length-1){U.i++}else{U.done=true;if(S.sim.b===null){S.sim.b=U.ans.filter((x,i)=>x===SIM_B[i].a).length;sync(true);renderStepper('sim');toast('Simulasi B tersimpan ✅')}}rSim()};
+  });
+}
+function meters(m){const d=[['⚡ Kinerja Sistem',m[0],'#5b6cff'],['💰 Efisiensi Biaya',m[1],'#1fcfa8'],['⚠️ Tingkat Risiko',m[2],'#ff6b6b']];
+  return d.map(x=>`<div class="meter"><div class="ml"><span>${x[0]}</span><span>${Math.round(x[1])}</span></div><div class="mb"><i style="width:${Math.max(0,Math.min(100,x[1]))}%;background:${x[2]}"></i></div></div>`).join('')}
+function simC(el){
+  const U=UI.simC;
+  if(U.done){
+    const sc=Math.round((U.m[0]+U.m[1]+(100-U.m[2]))/3);
+    const end=sc>=75?['🏆','Rencana Sangat Tepat','Spesifikasi sesuai kebutuhan, hemat, dan risikonya rendah.']:sc>=55?['👍','Rencana Cukup Baik','Sistem berjalan, tetapi beberapa keputusan masih membuat risiko tersisa. Tinjau ulang tahap yang kurang tepat.']:['🛠️','Perlu Evaluasi','Beberapa keputusan belum sesuai praktik perencanaan yang baik. Coba ulangi dan perhatikan penjelasan tiap tahap.'];
+    el.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:56px">${end[0]}</div><h2>${end[1]}</h2><div class="big grad">${sc}/100</div><p class="lead" style="margin:8px 0 14px">${end[2]}</p><div style="max-width:420px;margin:auto;text-align:left">${meters(U.m)}</div>
+    <div class="scroll" style="margin-top:14px;text-align:left"><table class="t"><thead><tr><th>Tahap</th><th>Keputusanmu</th></tr></thead><tbody>${SIM_C.map((p,i)=>`<tr><td><b>${p.t}</b></td><td>${esc(p.o[U.picks[i]][0])}</td></tr>`).join('')}</tbody></table></div>
+    ${S.sim.c!==null&&S.sim.c!==sc?`<p class="lead" style="margin-top:8px">Skor tercatat (percobaan pertama): ${S.sim.c}</p>`:''}<button class="btn alt" id="again" style="margin-top:12px">🔁 Ulangi</button></div>`;
+    $('#again').onclick=()=>{UI.simC={i:0,m:[50,50,50],picks:[],done:false};simC(el)};return}
+  const p=SIM_C[U.i];
+  el.innerHTML=`<div class="simc"><div class="card" style="margin:0"><div class="flow">${SIM_C.map((x,i)=>`<span class="fc" style="background:${i<U.i?'#1fcfa8':i===U.i?SIM_C[i].c:'#cdd2ee'}">${i+1}</span>`).join('')}</div>
+   <span class="tag" style="background:${p.c};color:#fff">${p.ic} Langkah ${U.i+1}: ${p.t}</span>
+   <div class="box b1x" style="margin:12px 0;font-size:15px">${p.s}</div>
+   ${p.o.map((o,j)=>`<button class="choice" data-j="${j}">${esc(o[0])}</button>`).join('')}<div id="fbC"></div></div>
+   <div class="card" style="margin:0"><h3>📊 Dasbor Proyek</h3>${meters(U.m)}<p class="lead" style="font-size:12.5px;margin-top:8px">Proyek: <b>PC Studio Multimedia (Rp15 juta)</b>. Ambil keputusan terbaik di tiap langkah!</p></div></div>`;
+  $$('.choice',el).forEach(b=>b.onclick=()=>{
+    const j=+b.dataset.j,o=p.o[j];U.picks[U.i]=j;
+    U.m=[U.m[0]+o[1],U.m[1]+o[2],U.m[2]+o[3]].map(x=>Math.max(0,Math.min(100,x)));
+    const best=p.o.reduce((bi,x,k)=>(x[1]+x[2]-x[3]>p.o[bi][1]+p.o[bi][2]-p.o[bi][3]?k:bi),0);
+    $$('.choice',el).forEach((x,k)=>{x.disabled=true;if(k===best)x.classList.add('ok');else if(k===j)x.classList.add('bad')});
+    if(j===best){b.classList.add('ok')}
+    $('#fbC').innerHTML=`<div class="fb ${j===best?'ok':'bad'}">${j===best?'✅ ':'⚠️ '}${o[4]}${j!==best?'<br><b>Pilihan terbaik:</b> '+esc(p.o[best][0])+' — '+p.o[best][4]:''}</div><div style="margin-top:12px"><button class="btn" id="nx">${U.i<SIM_C.length-1?'Langkah berikutnya →':'Selesai! 🚀'}</button></div>`;
+    $$('#v-sim .meter .mb i').forEach((e,k)=>e.style.width=U.m[k]+'%');
+    $('#nx').onclick=()=>{if(U.i<SIM_C.length-1){U.i++}else{U.done=true;if(S.sim.c===null){S.sim.c=Math.round((U.m[0]+U.m[1]+(100-U.m[2]))/3);sync(true);renderStepper('sim');toast('Simulasi C tersimpan ✅')}}rSim()};
+  });
+}
+
+/* ============================================================
+   POST-TEST (LKPD) — copy-paste dinonaktifkan
+   ============================================================ */
+function violLog(k,msg){if(S.post.submitted)return;S.post.viol[k]++;save();if(msg)toast(msg);sync()}
+function installLock(){
+  const v=$('#v-post');
+  const onPaste=e=>{e.preventDefault();violLog('paste','🚫 Paste dinonaktifkan. Ketik jawabanmu sendiri ya!')};
+  ['paste','drop'].forEach(ev=>v.addEventListener(ev,onPaste));
+  v.addEventListener('copy',e=>{e.preventDefault();violLog('copy','🚫 Copy dinonaktifkan.')});
+  v.addEventListener('cut',e=>{e.preventDefault();violLog('copy','🚫 Cut dinonaktifkan.')});
+  v.addEventListener('contextmenu',e=>e.preventDefault());
+  v.addEventListener('dragstart',e=>e.preventDefault());
+  v.addEventListener('selectstart',e=>{if(!e.target.closest||!e.target.closest('textarea'))e.preventDefault()});
+  v.addEventListener('beforeinput',e=>{if(/^insertFromPaste|^insertFromDrop|^insertFromYank/.test(e.inputType||'')){e.preventDefault();violLog('paste','🚫 Menempel teks dinonaktifkan.')}});
+  v.addEventListener('keydown',e=>{
+    const k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey)&&['c','v','x','insert'].includes(k)){e.preventDefault();violLog(k==='v'?'paste':'copy','🚫 Pintasan copy/paste dinonaktifkan.')}
+    if(e.shiftKey&&k==='insert'){e.preventDefault();violLog('paste','🚫 Paste dinonaktifkan.')}
+  });
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&document.body.dataset.view==='post'&&S.profile&&!S.post.submitted&&S.post.pred!==null)violLog('tab')});
+function scoreLkpd(ans){return LKPD.map((q,i)=>{const t=ans[i].toLowerCase();const hit=q.kw.map(r=>r.test(t)?1:0);return Math.round(hit.reduce((a,b)=>a+b,0)/q.kw.length*100)})}
+function rPost(){
+  const v=$('#v-post'),P=S.post;
+  if(!v.dataset.lock){installLock();v.dataset.lock=1}
+  if(P.submitted){
+    v.innerHTML=`<div class="card" style="text-align:center"><span class="tag mint">✅ LKPD terkirim</span><h2 style="margin-top:10px">Jawabanmu sudah tersimpan</h2>
+    <p class="lead">Guru akan menilai jawaban uraianmu. Estimasi otomatis (berdasarkan kata kunci konsep) hanyalah gambaran awal.</p>
+    <div class="score s2" style="max-width:260px;margin:14px auto"><div class="big">${P.auto}</div>Estimasi otomatis / 100</div>
+    <button class="btn" id="toR">Lanjut ke Refleksi 💭</button></div>`;
+    $('#toR').onclick=()=>go('refl');return;
+  }
+  if(P.pred===null){
+    v.innerHTML=`<div class="card"><span class="tag ora">✍️ Langkah 4</span><h2 style="margin-top:8px">Post-test: LKPD</h2>
+    <p class="lead">LKPD berisi 4 soal uraian: 2 soal untuk Tujuan 1 (perencanaan) dan 2 soal untuk Tujuan 2 (kebutuhan sistem); tiap tujuan memuat 1 soal biasa dan 1 soal HOTS.</p>
+    <div class="box b1x"><h4>🧭 Sebelum mulai — prediksi dirimu (metakognisi)</h4><p style="font-size:14px;margin-bottom:8px">Menurutmu, berapa nilai yang akan kamu peroleh pada LKPD ini? (0–100)</p>
+    <div class="row"><input type="range" id="pred" min="0" max="100" value="70" style="flex:1;accent-color:#5b6cff"><b class="big" id="predV" style="font-size:28px;min-width:64px">70</b></div></div>
+    <button class="btn" id="startP" style="margin-top:14px">Mulai Mengerjakan 🚀</button></div>`;
+    $('#pred').oninput=e=>$('#predV').textContent=e.target.value;
+    $('#startP').onclick=()=>{P.pred=+$('#pred').value;save();sync();rPost()};return;
+  }
+  v.classList.add('nocopy');
+  v.innerHTML=`<div class="card"><span class="tag ora">✍️ LKPD</span><h2 style="margin-top:8px">Lembar Kerja Peserta Didik</h2>
+   <p class="lead">Jawab dengan kalimatmu sendiri (minimal 15 kata per soal).</p></div>
+   ${LKPD.map((q,i)=>`<div class="q"><div class="qn"><b>${i+1}</b><div><span class="tag ${i<2?'':'pink'}" style="margin-bottom:6px">${q.tp}</span><div>${q.q}</div></div></div>
+   <textarea id="ans${i}" placeholder="Ketik jawabanmu di sini…" autocomplete="off" autocorrect="off" spellcheck="false">${esc(P.ans[i])}</textarea><div class="wc" id="wc${i}">0 kata</div></div>`).join('')}
+   <div class="row" style="justify-content:space-between"><span class="lead" id="lkInfo"></span><button class="btn mint" id="lkGo">Kirim LKPD ✅</button></div>`;
+  LKPD.forEach((q,i)=>{
+    const t=$('#ans'+i);const u=()=>$('#wc'+i).textContent=wc(t.value)+' kata';u();
+    let prev=t.value;
+    t.addEventListener('input',e=>{
+      if(t.value.length-prev.length>40&&!/composition/i.test(e.inputType||'')){t.value=prev;violLog('jump','🚫 Teks yang masuk terlalu banyak sekaligus, ditolak.');return}
+      prev=t.value;P.ans[i]=t.value;u();save();sync()});
+  });
+  $('#lkGo').onclick=()=>{
+    const short=P.ans.findIndex(a=>wc(a)<15);
+    if(short>=0){toast(`Jawaban nomor ${short+1} minimal 15 kata`);$('#ans'+short).focus();return}
+    if(!confirm('Kirim LKPD sekarang? Jawaban tidak bisa diubah setelah dikirim.'))return;
+    const det=scoreLkpd(P.ans);
+    P.detail=det;P.auto=Math.round(det.reduce((a,b)=>a+b,0)/det.length);P.submitted=true;save();sync(true);toast('LKPD terkirim! 🎉');go('post');
+  };
+}
+
+/* ============================================================
+   REFLEKSI
+   ============================================================ */
+function rRefl(){
+  const v=$('#v-refl');
+  v.innerHTML=`<div class="card"><span class="tag pink">💭 Langkah 5</span><h2 style="margin-top:8px">Refleksi Pembelajaran</h2>
+   <p class="lead">Tidak ada jawaban benar atau salah. Jawab sejujur mungkin supaya kamu mengenali cara belajarmu sendiri. Ini juga melatih <b>regulasi diri</b> (merencanakan, memantau, mengevaluasi) dan <b>metakognisi</b> (berpikir tentang cara berpikirmu).</p></div>
+   <div class="card"><h3>📊 Bagian 1 — Seberapa sesuai pernyataan ini denganmu?</h3><p class="lead" style="font-size:13px">1 = Tidak pernah · 2 = Jarang · 3 = Kadang · 4 = Sering · 5 = Selalu</p>
+   ${REFL_LIK.map((g,gi)=>`<div class="sect"><span>${g.ic}</span><h3 style="color:${g.c}">${g.g}</h3></div>${g.items.map((t,ii)=>`<div class="likert"><div>${t}</div><div class="sc">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="L${gi}_${ii}" value="${n}"><span>${n}</span></label>`).join('')}</div></div>`).join('')}`).join('')}</div>
+   <div class="card"><h3>🧠 Bagian 2 — Isi spontan, jangan terlalu lama berpikir</h3>
+   ${REFL_IMPL.map(q=>`<div class="q"><div class="qn"><div>${q.q}</div></div>${q.o.map((o,j)=>`<label class="opt"><input type="radio" name="${q.id}" value="${j}"><span>${esc(o)}</span></label>`).join('')}</div>`).join('')}
+   <div class="q"><div class="qn"><div>Strategi belajar yang paling membantuku hari ini (boleh lebih dari satu):</div></div><div class="pills" id="strat">${STRAT.map(s=>`<div class="pill" data-s="${esc(s)}">${s}</div>`).join('')}</div></div></div>
+   <div class="card"><h3>✏️ Bagian 3 — Tulis dengan kata-katamu</h3>${REFL_OPEN.map(q=>`<div class="field"><label class="l">${q.q}</label><textarea id="${q.id}" style="min-height:90px" placeholder="Tulis di sini…"></textarea></div>`).join('')}</div>
+   <div class="row" style="justify-content:flex-end"><button class="btn mint" id="rGo">Kirim Refleksi &amp; Lihat Hasil 🏁</button></div>`;
+  $$('#strat .pill').forEach(p=>p.onclick=()=>p.classList.toggle('on'));
+  $('#rGo').onclick=()=>{
+    const lik=REFL_LIK.map((g,gi)=>g.items.map((t,ii)=>{const x=$(`input[name=L${gi}_${ii}]:checked`);return x?+x.value:0}));
+    if(lik.flat().includes(0))return toast('Masih ada pernyataan pada Bagian 1 yang belum dijawab');
+    const impl={};for(const q of REFL_IMPL){const x=$(`input[name=${q.id}]:checked`);if(!x)return toast('Lengkapi Bagian 2 terlebih dahulu');impl[q.id]=q.o[+x.value]}
+    const strat=$$('#strat .pill.on').map(p=>p.dataset.s);
+    const open={};for(const q of REFL_OPEN){const t=$('#'+q.id).value.trim();if(wc(t)<4)return toast('Isi semua pertanyaan Bagian 3 (minimal beberapa kata)');open[q.id]=t}
+    S.refl={lik,impl,strat,open,domain:lik.map(a=>Math.round(a.reduce((x,y)=>x+y,0)/a.length*100)/100)};
+    save();sync(true);toast('Refleksi tersimpan 💜');go('hasil');
+  };
+}
+
+/* ============================================================
+   HASIL
+   ============================================================ */
+function rHasil(){
+  const P=S.post,r=S.refl,pre=S.pre.total,auto=P.auto;
+  const dom=r.domain;const names=REFL_LIK.map(g=>g.g);
+  const low=dom.indexOf(Math.min(...dom)),high=dom.indexOf(Math.max(...dom));
+  const adv=['Mulailah tiap sesi dengan menulis target kecil (misal: "hari ini aku bisa menentukan spesifikasi PC untuk editing video").','Berhenti sejenak tiap 10 menit: tanya dirimu "bagian mana yang belum kupahami?" dan ganti cara belajarmu bila macet.','Setelah tugas, catat 1 kesalahan, 1 penyebab, dan 1 strategi perbaikan.'];
+  const gap=P.pred!==null?P.pred-auto:0;
+  const cal=Math.abs(gap)<=10?'Prediksimu sangat dekat dengan estimasi hasil. Kamu cukup akurat menilai kemampuan sendiri! 🎯':gap>10?'Prediksimu lebih tinggi dari estimasi. Biasakan memeriksa pemahaman dengan menjelaskan ulang tanpa melihat materi.':'Kamu menilai dirimu lebih rendah dari estimasi hasil. Kamu mungkin mampu lebih dari yang kamu kira, percayalah pada usahamu! 💪';
+  const medal=(auto+pre)/2>=75?'🏆':'🌟';
+  $('#v-hasil').innerHTML=`<div class="card" style="text-align:center;background:linear-gradient(135deg,#eef0ff,#ffe9f5)"><div style="font-size:60px">${medal}</div><h1 style="font-size:30px">Hebat, ${esc(S.profile.nama.split(' ')[0])}!</h1><p class="lead">Kamu sudah menyelesaikan seluruh rangkaian pembelajaran. Data tersimpan ${CFG.SCRIPT_URL?'di Google Sheet gurumu':'di perangkat ini (mode lokal)'}.</p></div>
+  <div class="grid3"><div class="score s1"><div class="big">${pre}</div>Pre-test</div><div class="score s2"><div class="big">${S.sim.a}/${SIM_A.length} · ${S.sim.b}/${SIM_B.length} · ${S.sim.c}</div>Simulasi A · B · C</div><div class="score s3"><div class="big">${auto}</div>Estimasi LKPD (nilai resmi dari guru)</div></div>
+  <div class="grid2" style="margin-top:18px"><div class="card"><h3>🧭 Profil Regulasi Dirimu</h3>${dom.map((d,i)=>`<div class="meter"><div class="ml"><span>${REFL_LIK[i].ic} ${names[i]}</span><span>${d}/5</span></div><div class="mb"><i style="width:${d/5*100}%;background:${REFL_LIK[i].c}"></i></div></div>`).join('')}
+   <div class="box b2x" style="margin-top:10px">💪 Kekuatanmu: <b>${names[high]}</b>.</div><div class="box b4x" style="margin-top:8px">🌱 Area tumbuh: <b>${names[low]}</b>.</div></div>
+  <div class="card"><h3>🔮 Akurasi Metakognisi</h3><p>Prediksimu: <b>${P.pred}</b> · Estimasi hasil: <b>${auto}</b></p><p style="margin-top:8px">${cal}</p>
+   <div class="box b1x" style="margin-top:10px"><h4>Saran belajar untukmu</h4><ul>${[adv[low]].map(x=>`<li>${x}</li>`).join('')}<li>Komitmenmu: <i>"${esc(r.open.o4)}"</i></li></ul></div></div></div>
+  <div class="card"><h3>✅ Peningkatan: Pre-test → LKPD (estimasi)</h3><div class="meter"><div class="ml"><span>Pre-test</span><span>${pre}</span></div><div class="mb"><i style="width:${pre}%;background:#ff6bb5"></i></div></div><div class="meter"><div class="ml"><span>LKPD (estimasi)</span><span>${auto}</span></div><div class="mb"><i style="width:${auto}%;background:#1fcfa8"></i></div></div></div>
+  <div class="row" style="justify-content:center"><button class="btn alt" id="hOut">Keluar / Ganti Siswa</button></div>`;
+  $('#hOut').onclick=()=>{if(confirm('Keluar dari sesi ini? Data sudah tersimpan.')){S.profile=null;S.stage='login';save();go('login')}};
+}
+
+/* ============================================================
+   DASBOR GURU
+   ============================================================ */
+let GURU={pw:'',rows:[]};
+$('#gCancel').onclick=()=>$('#mGuru').classList.remove('on');
+$('#gPw').addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click()});
+$('#gGo').onclick=async()=>{
+  const pw=$('#gPw').value,er=$('#gErr');if(!pw)return er.textContent='Masukkan password.';
+  if(!CFG.SCRIPT_URL){GURU.pw='';GURU.rows=S.profile?[localRow()]:[];GURU.local=true;$('#mGuru').classList.remove('on');go('guru');return}
+  er.textContent='Memeriksa…';
+  try{const j=await api('list',{password:pw});if(!j.ok){er.textContent=j.error||'Gagal.';return}
+    GURU={pw,rows:j.rows,local:false};await loadJadwal();$('#mGuru').classList.remove('on');go('guru');
+  }catch(e){er.textContent='Tidak dapat terhubung ke server. Periksa SCRIPT_URL di config.js.'}
+};
+function localRow(){const r=record();r.nilai_guru='';r.catatan_guru='';return r}
+const num=x=>(x===''||x===null||x===undefined||isNaN(+x))?null:+x;
+const final=r=>num(r.nilai_guru)!==null?num(r.nilai_guru):num(r.post_auto);
+const avg=a=>{a=a.filter(x=>x!==null);return a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length*10)/10:0};
+const jp=(s,d)=>{try{return JSON.parse(s)}catch(e){return d}};
+function rGuru(){
+  const v=$('#v-guru');
+  v.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><div><span class="tag pink">👩‍🏫 Dasbor Guru</span><h2 style="margin-top:8px">Pemantauan Hasil Siswa</h2>${GURU.local?'<p class="lead" style="color:#c2410c">Mode lokal: belum terhubung ke Google Sheet. Hanya menampilkan data perangkat ini.</p>':''}</div>
+   <div class="row"><button class="btn sm alt" id="gRef">🔄 Muat ulang</button><button class="btn sm mint" id="gCsv">⬇️ Ekspor CSV</button><button class="btn sm alt" id="gOut">Keluar</button></div></div></div>
+   <div class="card"><h3>🗓️ Jadwal Pengerjaan per Kelas <span class="lead" style="font-size:12px">(waktu WIB)</span></h3>
+   ${GURU.local?'<p class="lead" style="color:#c2410c">Jadwal hanya dapat diatur setelah terhubung ke Google Sheet.</p>':`<div class="scroll"><table class="t"><thead><tr><th>Kelas</th><th>Mulai</th><th>Berakhir</th><th>Status</th></tr></thead><tbody>${KELAS.map(k=>{const w=JADWAL[k]||{},st=winState(k).s;return `<tr><td><b>${k}</b></td><td><input type="datetime-local" data-k="${k}" data-f="mulai" value="${toLocalIn(w.mulai)}"></td><td><input type="datetime-local" data-k="${k}" data-f="selesai" value="${toLocalIn(w.selesai)}"></td><td>${({open:'🟢 Berlangsung',wait:'🟡 Belum mulai',end:'🔴 Selesai',none:'⚪ Belum diatur',err:'⚠️'})[st]}</td></tr>`}).join('')}</tbody></table></div>
+   <div class="row" style="margin-top:12px"><button class="btn sm" id="gJad">💾 Simpan Jadwal</button><span class="lead" style="font-size:12.5px">Siswa hanya bisa masuk dan menyimpan jawaban dalam rentang ini.</span></div>`}</div>
+   <div id="gStats"></div>
+   <div class="card"><div class="row" style="margin-bottom:12px"><select id="gKelas" style="max-width:160px"><option value="">Semua kelas</option>${KELAS.map(k=>`<option>${k}</option>`).join('')}</select><input type="text" id="gCari" placeholder="Cari nama / NIS…" style="max-width:260px"></div><div class="scroll"><table class="t" id="gTable"></table></div></div>`;
+  $('#gKelas').onchange=drawGuru;$('#gCari').oninput=drawGuru;
+  $('#gOut').onclick=()=>{GURU={pw:'',rows:[]};go('login')};
+  $('#gCsv').onclick=csv;
+  const gj=$('#gJad');if(gj)gj.onclick=async()=>{
+    const jd={};let bad='';
+    KELAS.forEach(k=>{const a=$(`input[data-k="${k}"][data-f="mulai"]`).value,b=$(`input[data-k="${k}"][data-f="selesai"]`).value;
+      if(a&&b){if(b<=a)bad=k;jd[k]={mulai:a+':00+07:00',selesai:b+':00+07:00'}}else if(a||b)bad=k});
+    if(bad)return toast(`Jadwal kelas ${bad} belum lengkap atau waktu selesai sebelum mulai`);
+    try{const j=await api('setSchedule',{password:GURU.pw,jadwal:jd});if(j.ok){await loadJadwal();rGuru();toast('Jadwal tersimpan ✅')}else toast(j.error||'Gagal')}catch(e){toast('Gagal terhubung')}};
+  $('#gRef').onclick=async()=>{if(GURU.local){GURU.rows=S.profile?[localRow()]:[];drawGuru();return}try{const j=await api('list',{password:GURU.pw});if(j.ok){GURU.rows=j.rows;drawGuru();toast('Data dimuat ulang ✅')}else toast(j.error)}catch(e){toast('Gagal terhubung')}};
+  drawGuru();
+}
+function filtered(){const k=$('#gKelas').value,q=$('#gCari').value.toLowerCase();return GURU.rows.filter(r=>(!k||r.kelas===k)&&(!q||String(r.nama).toLowerCase().includes(q)||String(r.nis).includes(q)))}
+function drawGuru(){
+  const all=GURU.rows,rows=filtered();
+  const done=all.filter(r=>r.status==='Selesai'||r.status==='Dinilai').length;
+  const pre=avg(all.map(r=>num(r.pre_total))),fin=avg(all.map(final));
+  $('#gStats').innerHTML=`<div class="grid4"><div class="stat s1"><b>${all.length}</b><small>Siswa terdata</small></div><div class="stat s2"><b>${done}</b><small>Menyelesaikan semua</small></div><div class="stat s3"><b>${pre}</b><small>Rata-rata Pre-test</small></div><div class="stat s4"><b>${fin}</b><small>Rata-rata LKPD (nilai guru / estimasi)</small></div></div>
+  <div class="card"><h3>📊 Rata-rata per Kelas</h3><div class="bars" style="margin-top:10px">${KELAS.map(k=>{const g=all.filter(r=>r.kelas===k);const a=avg(g.map(r=>num(r.pre_total))),b=avg(g.map(final));return `<div class="bar-row"><span>${k}<br><small style="color:var(--mut)">${g.length} siswa</small></span><div class="bb"><div style="width:${Math.max(a,3)}%;background:#ff6bb5">Pre ${a}</div><div style="width:${Math.max(b,3)}%;background:#1fcfa8">LKPD ${b}</div></div></div>`}).join('')}</div></div>`;
+  const t=$('#gTable');
+  t.innerHTML=`<thead><tr><th>Nama</th><th>NIS</th><th>Kelas</th><th>Tahap</th><th>Pre</th><th>Sim A/B/C</th><th>LKPD auto</th><th>Nilai Guru</th><th>Selisih</th><th>Pelanggaran</th><th></th></tr></thead><tbody>${rows.length?rows.map((r,i)=>{const vi=jp(r.pelanggaran,{});const vs=(vi.paste||0)+(vi.copy||0)+(vi.tab||0)+(vi.jump||0);const f=final(r),p=num(r.pre_total);
+   return `<tr><td><b>${esc(r.nama)}</b></td><td>${esc(r.nis)}</td><td>${esc(r.kelas)}</td><td><span class="chip-s">${esc(r.status==='Selesai'||r.status==='Dinilai'?'Selesai':r.tahap)}</span></td><td>${r.pre_total===''?'-':r.pre_total}</td><td>${r.sim_a===''?'-':r.sim_a} / ${r.sim_b===''?'-':r.sim_b} / ${r.sim_c===''?'-':r.sim_c}</td><td>${r.post_auto===''?'-':r.post_auto}</td><td>${r.nilai_guru===''?'<i style="color:var(--mut)">belum</i>':'<b>'+r.nilai_guru+'</b>'}</td><td>${f!==null&&p!==null?(f-p>=0?'▲ +':'▼ ')+Math.round((f-p)*10)/10:'-'}</td><td>${vs?`<span class="tag ora">⚠️ ${vs}</span>`:'—'}</td><td><button class="btn sm" data-id="${esc(r.id)}">Detail</button></td></tr>`}).join(''):'<tr><td colspan="11" style="text-align:center;color:var(--mut)">Belum ada data.</td></tr>'}</tbody>`;
+  $$('#gTable button').forEach(b=>b.onclick=()=>detail(b.dataset.id));
+}
+function detail(id){
+  const r=GURU.rows.find(x=>String(x.id)===String(id));if(!r)return;
+  const vi=jp(r.pelanggaran,{}),rf=jp(r.refleksi,null),pj=jp(r.pre_jawaban,[]),det=jp(r.post_detail,[]);
+  const m=$('#mDetailBody');
+  m.innerHTML=`<div class="row" style="justify-content:space-between"><h3>👤 ${esc(r.nama)} · NIS ${esc(r.nis)} · ${esc(r.kelas)}</h3><button class="btn sm alt" id="dX">Tutup ✕</button></div>
+  <p class="lead" style="margin:4px 0 12px">Tanggal: ${esc(r.tanggal)} · Update: ${esc(r.waktu_update)}</p>
+  <div class="grid3"><div class="box b1x"><h4>Pre-test</h4>PG ${r.pre_pg||'-'} · PGK ${r.pre_pgk||'-'}<br><b>Total ${r.pre_total||'-'}</b></div><div class="box b2x"><h4>Simulasi</h4>A ${r.sim_a===''?'-':r.sim_a}/${SIM_A.length} · B ${r.sim_b===''?'-':r.sim_b}/${SIM_B.length} · C ${r.sim_c===''?'-':r.sim_c}</div><div class="box b3x"><h4>Integritas</h4>Paste ${vi.paste||0} · Copy ${vi.copy||0} · Pindah tab ${vi.tab||0} · Teks mendadak ${vi.jump||0}<br>Prediksi diri: ${r.prediksi===''?'-':r.prediksi}</div></div>
+  <h4 style="margin:16px 0 8px">✍️ Jawaban LKPD</h4>
+  ${LKPD.map((q,i)=>`<div class="q"><div class="qn"><b>${i+1}</b><div><span class="tag" style="margin-bottom:4px">${q.tp}</span><div style="font-weight:600">${q.q}</div></div></div><div class="box b1x" style="white-space:pre-wrap">${esc(r['post_'+(i+1)])||'<i>belum dijawab</i>'}</div><p style="font-size:12px;color:var(--mut);margin-top:6px">Rubrik: ${q.rub}<br>Kecocokan kata kunci otomatis: <b>${det[i]!==undefined?det[i]:'-'}%</b></p></div>`).join('')}
+  ${rf?`<h4 style="margin:16px 0 8px">💭 Refleksi</h4><div class="box b4x"><b>Skor regulasi diri:</b> ${REFL_LIK.map((g,i)=>g.g+' '+(rf.domain?rf.domain[i]:'-')+'/5').join(' · ')}<br><b>Reaksi spontan:</b> ${Object.values(rf.impl||{}).map(esc).join(' | ')}<br><b>Strategi:</b> ${esc((rf.strat||[]).join(', ')||'-')}<hr style="border:0;border-top:1px dashed #e6c86e;margin:8px 0">${REFL_OPEN.map(q=>`<b>${q.q}</b><br>${esc((rf.open||{})[q.id]||'-')}<br>`).join('<br>')}</div>`:''}
+  <h4 style="margin:16px 0 8px">🎓 Penilaian Guru</h4><div class="grid2"><div class="field"><label class="l">Nilai LKPD (0–100)</label><input type="text" id="dNilai" inputmode="decimal" value="${esc(r.nilai_guru)}" placeholder="${esc(r.post_auto)}"></div><div class="field"><label class="l">Catatan / umpan balik</label><input type="text" id="dCat" value="${esc(r.catatan_guru)}"></div></div>
+  <button class="btn" id="dSave">Simpan Nilai</button>`;
+  $('#mDetail').classList.add('on');
+  $('#dX').onclick=()=>$('#mDetail').classList.remove('on');
+  $('#dSave').onclick=async()=>{
+    const n=parseFloat(String($('#dNilai').value).replace(',','.'));if(isNaN(n)||n<0||n>100)return toast('Nilai harus 0–100');
+    const c=$('#dCat').value.trim();
+    if(GURU.local){r.nilai_guru=n;r.catatan_guru=c;drawGuru();$('#mDetail').classList.remove('on');return toast('Tersimpan (lokal)')}
+    try{const j=await api('grade',{password:GURU.pw,id:r.id,nilai_guru:n,catatan_guru:c});if(j.ok){r.nilai_guru=n;r.catatan_guru=c;r.status='Dinilai';drawGuru();$('#mDetail').classList.remove('on');toast('Nilai tersimpan ke Google Sheet ✅')}else toast(j.error||'Gagal')}catch(e){toast('Gagal terhubung')}
+  };
+}
+$('#mDetail').addEventListener('click',e=>{if(e.target.id==='mDetail')e.target.classList.remove('on')});
+function csv(){
+  const cols=['nama','nis','kelas','tanggal','status','pre_pg','pre_pgk','pre_total','sim_a','sim_b','sim_c','prediksi','post_auto','nilai_guru','catatan_guru','pelanggaran'];
+  const q=x=>'"'+String(x??'').replace(/"/g,'""')+'"';
+  const t=[cols.join(',')].concat(filtered().map(r=>cols.map(c=>q(r[c])).join(','))).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download='hasil-ppsk-xii.csv';a.click();
+}
+
+
+/* ============================================================
+   MULAI
+   ============================================================ */
+$('#appName').textContent=CFG.JUDUL||'Perencanaan dan Pengembangan Sistem Komputer';$('#appSub').textContent=CFG.MAPEL||'MPI Informatika XII';
+(function init(){
+  if(S.profile&&S.stage&&S.stage!=='login'&&unlocked(S.stage)){go(S.stage)}else go('login');
+})();
+</script>
+</body>
+</html>
